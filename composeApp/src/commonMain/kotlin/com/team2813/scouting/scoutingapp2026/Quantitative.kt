@@ -7,10 +7,12 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,10 +33,25 @@ fun Autonomous() {
     Text("This is the Autonomous screen!")
 }
 
+
+data class TeleopData(
+    val Cycles: MutableState<Int> = mutableStateOf(0),
+    val Fuel: MutableState<Int> = mutableStateOf(0)
+)
 @Composable
 @Preview(showBackground = true)
-fun Teleoperated() {
-    Text("This is the Teleoperated screen!")
+fun Teleoperated(
+    modifier: Modifier = Modifier,
+    teleopData: TeleopData = remember { TeleopData() }) {
+    var cycles by teleopData.Cycles
+    var fuel by teleopData.Fuel
+    Column{
+
+
+    }
+
+
+
 }
 
 @Composable
@@ -46,7 +63,7 @@ fun Endgame() {
 @Composable
 @Preview(showBackground = true)
 fun Quantitative() {
-    var currentScreen by remember { mutableStateOf(0) }
+    var currentScreen by remember { mutableStateOf(2) }
     AnimatedContent(
         currentScreen, modifier = Modifier.size(300.dp, 400.dp),
         transitionSpec = {
@@ -62,6 +79,7 @@ fun Quantitative() {
                         fadeOut()
             }
         }
+
     ) { targetScreen ->
         Column {
             when (targetScreen) {
