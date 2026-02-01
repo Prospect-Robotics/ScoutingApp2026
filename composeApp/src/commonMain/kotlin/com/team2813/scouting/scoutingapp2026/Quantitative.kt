@@ -3,6 +3,7 @@ package com.team2813.scouting.scoutingapp2026
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -14,11 +15,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+
+class MutableIntStateProvider: PreviewParameterProvider<MutableIntState> {
+    override val values: Sequence<MutableIntState> = sequenceOf(mutableIntStateOf(0))
+}
 
 @Composable
 @Preview(showBackground = true)
 fun ApproxFuel(
-    fuelCounter: MutableState<Int> = remember { mutableIntStateOf(0) },
+    // Require a fuel counter when calling this function, but provide a default value for the preview
+    @PreviewParameter(MutableIntStateProvider::class)
+    fuelCounter: MutableState<Int>,
     enabled: Boolean = true
 ) {
     val incValues = intArrayOf(1, 5, 10)
