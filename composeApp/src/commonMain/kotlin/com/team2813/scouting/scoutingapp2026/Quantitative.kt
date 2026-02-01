@@ -27,7 +27,7 @@ class MutableIntStateProvider: PreviewParameterProvider<MutableIntState> {
 fun ApproxFuel(
     // Require a fuel counter when calling this function, but provide a default value for the preview
     @PreviewParameter(MutableIntStateProvider::class)
-    fuelCounter: MutableState<Int>,
+    fuelCounter: MutableIntState,
     enabled: Boolean = true
 ) {
     val incValues = intArrayOf(1, 5, 10)
