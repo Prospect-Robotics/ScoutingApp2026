@@ -1,11 +1,7 @@
 package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -108,11 +104,15 @@ fun Endgame() {
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    widthDp = 300,
+    heightDp = 400
+)
 fun Quantitative() {
     var currentScreen by remember { mutableStateOf(0) }
     AnimatedContent(
-        currentScreen, modifier = Modifier.size(300.dp, 400.dp),
+        currentScreen, modifier = Modifier.fillMaxSize(),
         transitionSpec = {
             if (targetState > initialState) {
                 slideInHorizontally { width -> width } +
@@ -127,7 +127,10 @@ fun Quantitative() {
             }
         }
     ) { targetScreen ->
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)
+        ) {
             when (targetScreen) {
                 0 -> Prematch()
                 1 -> Autonomous()
@@ -137,8 +140,15 @@ fun Quantitative() {
             Button(onClick = {currentScreen++}) {
                 Text("Next")
             }
-            Button(onClick = {currentScreen--}) {
-                Text("Previous")
+            if (targetScreen > 0) {
+                Button(onClick = {
+                    // make sure that we don't go under 0
+                    if (currentScreen > 0) {
+                        currentScreen--
+                    }
+                }) {
+                    Text("Previous")
+                }
             }
         }
     }
