@@ -1,8 +1,10 @@
 package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -10,12 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import scoutingapp2026.composeapp.generated.resources.Res
+import scoutingapp2026.composeapp.generated.resources.auto_fuel_depot
+import scoutingapp2026.composeapp.generated.resources.auto_fuel_neutral
+import scoutingapp2026.composeapp.generated.resources.auto_fuel_outpost
+import scoutingapp2026.composeapp.generated.resources.auto_shoot_preload
 
 class MutableIntStateProvider: PreviewParameterProvider<MutableIntState> {
-    override val values: Sequence<MutableIntState> = sequenceOf(mutableIntStateOf(0))
+    override val values: Sequence<MutableIntState> = sequenceOf(mutableIntStateOf(0), mutableIntStateOf(1000))
 }
 
 @Composable
@@ -24,24 +32,29 @@ fun ApproxFuel(
     // Require a fuel counter when calling this function, but provide a default value for the preview
     @PreviewParameter(MutableIntStateProvider::class)
     fuelCounter: MutableIntState,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
     val incValues = intArrayOf(1, 5, 10)
     var fuelNum: Int by fuelCounter
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(15.dp, Alignment.CenterHorizontally),
+        modifier = modifier
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(70.dp)
         ) {
             for (value in incValues) {
-                Button({
-                    fuelNum -= value
-                    if (fuelNum < 0) {
-                        fuelNum = 0
-                    }
-                } , enabled = enabled) {
+                Button(
+                    onClick = {
+                        fuelNum = maxOf(fuelNum - value, 0)
+                    },
+                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
+                    enabled = enabled,
+                    contentPadding = PaddingValues(vertical = 10.dp)
+                ) {
                     Text("-$value")
                 }
             }
@@ -68,10 +81,16 @@ fun ApproxFuel(
             }
         }
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(70.dp)
         ) {
             for (value in incValues) {
-                Button({fuelNum += value}, enabled = enabled) {
+                Button(
+                    onClick = {fuelNum += value},
+                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
+                    enabled = enabled,
+                    contentPadding = PaddingValues(vertical = 10.dp)
+                ) {
                     Text("+$value")
                 }
             }
@@ -87,8 +106,53 @@ fun Prematch() {
 
 @Composable
 @Preview(showBackground = true)
-fun Autonomous() {
-    Text("This is the Autonomous screen!")
+fun Autonomous(modifier: Modifier = Modifier) {
+    val _approxFuel = remember { mutableIntStateOf(0) }
+    var approxFuel by _approxFuel
+    var shootPreload by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(horizontalAlignment = Alignment.Start) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    shootPreload,
+                    onCheckedChange = {
+                        shootPreload = it
+                        if (it) {
+                            approxFuel += 8
+                        } else {
+                            approxFuel = maxOf(approxFuel - 8, 0)
+                        }
+                    }
+                )
+                Text(stringResource(Res.string.auto_shoot_preload))
+            }
+            val fuelOutpost = remember { mutableStateOf(false) }
+            val fuelDepot = remember { mutableStateOf(false) }
+            val fuelNeutral = remember { mutableStateOf(false) }
+            val stateArr = arrayOf(
+                fuelNeutral to Res.string.auto_fuel_neutral,
+                fuelDepot to Res.string.auto_fuel_depot,
+                fuelOutpost to Res.string.auto_fuel_outpost
+            )
+            for ((mutableState, str) in stateArr) {
+                var state by mutableState
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        state,
+                        onCheckedChange = { state = it }
+                    )
+                    Text(stringResource(str))
+                }
+            }
+        }
+
+        ApproxFuel(_approxFuel, modifier = Modifier.fillMaxWidth())
+    }
 }
 
 @Composable
@@ -127,26 +191,30 @@ fun Quantitative() {
             }
         }
     ) { targetScreen ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)
-        ) {
+        Box {
+            val modifier = Modifier.fillMaxWidth().align(Alignment.Center)
             when (targetScreen) {
                 0 -> Prematch()
-                1 -> Autonomous()
+                1 -> Autonomous(modifier)
                 2 -> Teleoperated()
                 3 -> Endgame()
             }
-            Button(onClick = {currentScreen++}) {
+            Button(
+                onClick = {currentScreen++},
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
                 Text("Next")
             }
             if (targetScreen > 0) {
-                Button(onClick = {
-                    // make sure that we don't go under 0
-                    if (currentScreen > 0) {
-                        currentScreen--
-                    }
-                }) {
+                Button(
+                    onClick = {
+                        // make sure that we don't go under 0
+                        if (currentScreen > 0) {
+                            currentScreen--
+                        }
+                    },
+                    modifier = Modifier.align(Alignment.BottomStart)
+                ) {
                     Text("Previous")
                 }
             }
