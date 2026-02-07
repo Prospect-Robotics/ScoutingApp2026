@@ -1,17 +1,23 @@
 package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -118,18 +124,22 @@ fun Autonomous(modifier: Modifier = Modifier) {
     ) {
         Column(horizontalAlignment = Alignment.Start) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                val change: (Boolean) -> Unit = {
+                    shootPreload = it
+                    if (it) {
+                        approxFuel += 8
+                    } else {
+                        approxFuel = maxOf(approxFuel - 8, 0)
+                    }
+                }
                 Checkbox(
                     shootPreload,
-                    onCheckedChange = {
-                        shootPreload = it
-                        if (it) {
-                            approxFuel += 8
-                        } else {
-                            approxFuel = maxOf(approxFuel - 8, 0)
-                        }
-                    }
+                    onCheckedChange = change
                 )
-                Text(stringResource(Res.string.auto_shoot_preload))
+                Text(
+                    stringResource(Res.string.auto_shoot_preload),
+                    modifier = Modifier.clickable { change (!shootPreload)}
+                )
             }
             val fuelOutpost = remember { mutableStateOf(false) }
             val fuelDepot = remember { mutableStateOf(false) }
@@ -144,9 +154,14 @@ fun Autonomous(modifier: Modifier = Modifier) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
                         state,
-                        onCheckedChange = { state = it }
+                        onCheckedChange = { state = it },
                     )
-                    Text(stringResource(str))
+                    Text(
+                        stringResource(str),
+                        modifier = Modifier.clickable {
+                            state = !state
+                        }
+                    )
                 }
             }
         }
