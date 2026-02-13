@@ -4,33 +4,40 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.semantics.Role.Companion.Checkbox
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
@@ -64,6 +71,68 @@ fun IncrementButton(
                 onClick = { currentCount += 1 },
                 enabled = currentCount < maximum && enabled) {
                 Text("$currentCount", fontSize = 20.sp)
+            }
+        }
+    }
+}
+class MutableIntStateProvider: PreviewParameterProvider<MutableIntState> {
+    override val values: Sequence<MutableIntState> = sequenceOf(mutableIntStateOf(0))
+}
+@Composable
+fun ApproxFuel(
+// Require a fuel counter when calling this function, but provide a default value for the preview
+    @PreviewParameter(MutableIntStateProvider::class)
+    fuelCounter: Int.Companion,
+    enabled: Boolean = true
+) {
+    val incValues = intArrayOf(1, 5, 10)
+    var fuelNum: Int by fuelCounter
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            for (value in incValues) {
+                Button({
+                    fuelNum -= value
+                    if (fuelNum < 0) {
+                        fuelNum = 0
+                    }
+                } , enabled = enabled) {
+                    Text("-$value")
+                }
+            }
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AnimatedContent(
+                fuelNum,
+                transitionSpec = {
+                    if (targetState < initialState) {
+                        slideInVertically { it } togetherWith slideOutVertically { -it }
+                    } else {
+                        slideInVertically { -it } togetherWith slideOutVertically { it }
+                    }
+                }
+            ) { fuelCount ->
+                Text(
+                    "$fuelCount",
+                    Modifier.width(35.dp),
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            for (value in incValues) {
+                Button({fuelNum += value}, enabled = enabled) {
+                    Text("+$value")
+                }
             }
         }
     }
@@ -128,6 +197,11 @@ fun Teleoperated(
                 IncrementButton("Cycles", teleopData.Cycles, enabled = true)
                 //IncrementButton(stringResource(Res.string.cycles), teleopData.Cycles, enabled = true)
             }
+        }
+        Column(modifier = modifier.fillMaxWidth().fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)){
+            ApproxFuel(fuelCounter = Int, enabled = true)
         }
         Column(
             modifier = Modifier.fillMaxWidth(),
