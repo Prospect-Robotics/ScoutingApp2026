@@ -182,9 +182,9 @@ fun Teleoperated(
         }
     }
     Column(
-        modifier = modifier.fillMaxWidth().fillMaxHeight(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
     ) {
 
 
@@ -203,32 +203,22 @@ fun Teleoperated(
                 //IncrementButton(stringResource(Res.string.cycles), teleopData.Cycles, enabled = true)
             }
         }
-        Column(modifier = modifier.fillMaxWidth().fillMaxHeight(),
+        val fuelAmount = mutableIntStateOf(0)
+        Column(modifier = modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)){
-            ApproxFuel(fuelCounter = Int, enabled = true)
+            ApproxFuel(fuelCounter = fuelAmount, enabled = true)
         }
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
+        //Text(stringResource(Res.string.herding), fontSize = 20.sp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text("Herding", fontSize = 20.sp)
-            //Text(stringResource(Res.string.herding), fontSize = 20.sp)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(herding, onCheckedChange = { herding = !herding }
-                    )
+            Checkbox(herding, onCheckedChange = { herding = !herding }
+                )
 
-            }
         }
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Text("Incapacitated", fontSize = 20.sp)
             //Text(stringResource(Res.string.incapacitated), fontSize = 20.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Incapacitated", fontSize = 20.sp)
                 Checkbox(
                     incapacitatedMark != null,
                     onCheckedChange = { curr ->
@@ -246,7 +236,7 @@ fun Teleoperated(
 
 
             }
-        }
+
     }
 
 }
@@ -292,7 +282,8 @@ fun Teleoperated(
                     }
                     Button(onClick = { currentScreen++ }) {
                         Text("Next")
-                    }if (targetScreen > 0) {
+                    }
+                    if (targetScreen > 0) {
                     Button(onClick = { // make sure that we don't go under 0
                     if (currentScreen > 0) {currentScreen--
                         }
