@@ -2,17 +2,25 @@ package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import scoutingapp2026.composeapp.generated.resources.Res
+import scoutingapp2026.composeapp.generated.resources.matchNumber
+import scoutingapp2026.composeapp.generated.resources.nameOfPerson
+import scoutingapp2026.composeapp.generated.resources.teamNumber
 
 class MutableIntStateProvider: PreviewParameterProvider<MutableIntState> {
     override val values: Sequence<MutableIntState> = sequenceOf(mutableIntStateOf(0))
@@ -82,7 +90,38 @@ fun ApproxFuel(
 @Composable
 @Preview(showBackground = true)
 fun Prematch() {
-    Text("This is the Prematch screen!")
+    Column(verticalArrangement = Arrangement.spacedBy(30.dp)) {
+        var scoutingTeamNumber by remember { mutableStateOf("") } // Name of the Scouting Team #
+        TextField(
+            value = scoutingTeamNumber,
+            onValueChange = { scoutingTeamNumber = it },
+            singleLine = true,
+            label = {
+                Text(stringResource(Res.string.teamNumber))
+            },
+            keyboardOptions = KeyboardOptions(keyboardType= KeyboardType.Number)
+        )
+        var nameOfHuman by remember { mutableStateOf("") } // Name of the Human being that is scouting
+        TextField(
+            value = nameOfHuman,
+            onValueChange = { nameOfHuman = it },
+            singleLine = true,
+            label = {
+                Text(stringResource(Res.string.nameOfPerson))
+            }
+        )
+        var matchNumber by remember { mutableStateOf("") } // the match that the Human is scouting
+        TextField(
+            value = matchNumber,
+            onValueChange = { matchNumber = it },
+            singleLine = true,
+            label = {
+                Text(stringResource(Res.string.matchNumber))
+            },
+            keyboardOptions = KeyboardOptions(keyboardType= KeyboardType.Number)
+        )
+
+    }
 }
 
 @Composable
