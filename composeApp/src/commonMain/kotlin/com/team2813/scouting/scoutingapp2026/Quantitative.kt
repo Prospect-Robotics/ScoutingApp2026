@@ -39,6 +39,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.time.Duration
+import kotlin.time.TimeSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -51,8 +53,6 @@ import scoutingapp2026.composeapp.generated.resources.auto_shoot_preload
 import scoutingapp2026.composeapp.generated.resources.matchNumber
 import scoutingapp2026.composeapp.generated.resources.nameOfPerson
 import scoutingapp2026.composeapp.generated.resources.teamNumber
-import kotlin.time.Duration
-import kotlin.time.TimeSource
 
 @Composable
 fun IncrementButton(
@@ -204,6 +204,7 @@ fun Autonomous(modifier: Modifier = Modifier) {
     val _approxFuel = remember { mutableIntStateOf(0) }
     var approxFuel by _approxFuel
     var shootPreload by remember { mutableStateOf(false) }
+    val cycleNumber = remember { mutableStateOf(0) }
 
     Column(
         modifier = modifier,
@@ -248,6 +249,8 @@ fun Autonomous(modifier: Modifier = Modifier) {
             }
 
             ApproxFuel(_approxFuel, modifier = Modifier.fillMaxWidth())
+
+            IncrementButton("Cycle counter", cycleNumber)
         }
 }
 
