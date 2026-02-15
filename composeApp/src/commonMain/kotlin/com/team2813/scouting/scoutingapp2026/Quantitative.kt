@@ -1,6 +1,5 @@
 package com.team2813.scouting.scoutingapp2026
 
-import androidx.compose.animation.*
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,7 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableIntState
@@ -40,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -52,6 +51,8 @@ import scoutingapp2026.composeapp.generated.resources.auto_shoot_preload
 import scoutingapp2026.composeapp.generated.resources.matchNumber
 import scoutingapp2026.composeapp.generated.resources.nameOfPerson
 import scoutingapp2026.composeapp.generated.resources.teamNumber
+import kotlin.time.Duration
+import kotlin.time.TimeSource
 
 @Composable
 fun IncrementButton(
