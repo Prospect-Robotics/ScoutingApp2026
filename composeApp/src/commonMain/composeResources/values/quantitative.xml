@@ -1,0 +1,6 @@
+<resources>
+    <string name="auto_shoot_preload">Shot Preload</string>
+    <string name="auto_fuel_outpost">Fuel from Outpost</string>
+    <string name="auto_fuel_depot">Fuel from Depot</string>
+    <string name="auto_fuel_neutral">Fuel from Neutral Zone</string>
+</resources>
