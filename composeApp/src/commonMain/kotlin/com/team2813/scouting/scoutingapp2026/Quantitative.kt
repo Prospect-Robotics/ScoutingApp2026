@@ -151,36 +151,34 @@ fun ApproxFuel(
 @Preview(showBackground = true)
 fun Prematch() {
     Column(verticalArrangement = Arrangement.spacedBy(30.dp)) {
-        var scoutingTeamNumber by remember { mutableStateOf("") } // Name of the Scouting Team #
+        var scoutingTeamNumber by remember {
+            mutableStateOf("")
+        } // Name of the Scouting Team #
         TextField(
             value = scoutingTeamNumber,
             onValueChange = { scoutingTeamNumber = it },
             singleLine = true,
-            label = {
-                Text(stringResource(Res.string.teamNumber))
-            },
-            keyboardOptions = KeyboardOptions(keyboardType= KeyboardType.Number)
-        )
-        var nameOfHuman by remember { mutableStateOf("") } // Name of the Human being that is scouting
+            label = { Text(stringResource(Res.string.teamNumber)) },
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Number))
+        var nameOfHuman by remember {
+            mutableStateOf("")
+        } // Name of the Human being that is scouting
         TextField(
             value = nameOfHuman,
             onValueChange = { nameOfHuman = it },
             singleLine = true,
-            label = {
-                Text(stringResource(Res.string.nameOfPerson))
-            }
-        )
-        var matchNumber by remember { mutableStateOf("") } // the match that the Human is scouting
+            label = { Text(stringResource(Res.string.nameOfPerson)) })
+        var matchNumber by remember {
+            mutableStateOf("")
+        } // the match that the Human is scouting
         TextField(
             value = matchNumber,
             onValueChange = { matchNumber = it },
             singleLine = true,
-            label = {
-                Text(stringResource(Res.string.matchNumber))
-            },
-            keyboardOptions = KeyboardOptions(keyboardType= KeyboardType.Number)
-        )
-
+            label = { Text(stringResource(Res.string.matchNumber)) },
+            keyboardOptions =
+                KeyboardOptions(keyboardType = KeyboardType.Number))
     }
 }
 
