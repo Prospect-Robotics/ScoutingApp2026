@@ -109,60 +109,57 @@ fun ApproxFuel(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement =
             Arrangement.spacedBy(15.dp, Alignment.CenterHorizontally),
-        modifier = modifier
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(70.dp)
-        ) {
-            for (value in incValues) {
-                Button(
-                    onClick = {
-                        fuelNum = maxOf(fuelNum - value, 0)
-                    },
-                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
-                    enabled = enabled,
-                    contentPadding = PaddingValues(vertical = 10.dp)
-                ) {
-                    Text("-$value")
-                }
-            }
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            AnimatedContent(
-                fuelNum,
-                transitionSpec = {
-                    if (targetState < initialState) {
-                        slideInVertically { it } togetherWith
-                            slideOutVertically { -it }
-                    } else {
-                        slideInVertically { -it } togetherWith
-                            slideOutVertically { it }
+        modifier = modifier) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.width(70.dp)) {
+                    for (value in incValues) {
+                        Button(
+                            onClick = { fuelNum = maxOf(fuelNum - value, 0) },
+                            modifier =
+                                Modifier.padding(vertical = 10.dp)
+                                    .fillMaxWidth(),
+                            enabled = enabled,
+                            contentPadding = PaddingValues(vertical = 10.dp)) {
+                                Text("-$value")
+                            }
                     }
-                }) { fuelCount ->
-                    Text(
-                        "$fuelCount",
-                        Modifier.width(35.dp),
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center)
                 }
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(70.dp)
-        ) {
-            for (value in incValues) {
-                Button(
-                    onClick = { fuelNum += value },
-                    modifier = Modifier.padding(vertical = 10.dp).fillMaxWidth(),
-                    enabled = enabled,
-                    contentPadding = PaddingValues(vertical = 10.dp)
-                ) {
-                    Text("+$value")
-                }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                AnimatedContent(
+                    fuelNum,
+                    transitionSpec = {
+                        if (targetState < initialState) {
+                            slideInVertically { it } togetherWith
+                                slideOutVertically { -it }
+                        } else {
+                            slideInVertically { -it } togetherWith
+                                slideOutVertically { it }
+                        }
+                    }) { fuelCount ->
+                        Text(
+                            "$fuelCount",
+                            Modifier.width(35.dp),
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center)
+                    }
             }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.width(70.dp)) {
+                    for (value in incValues) {
+                        Button(
+                            onClick = { fuelNum += value },
+                            modifier =
+                                Modifier.padding(vertical = 10.dp)
+                                    .fillMaxWidth(),
+                            enabled = enabled,
+                            contentPadding = PaddingValues(vertical = 10.dp)) {
+                                Text("+$value")
+                            }
+                    }
+                }
         }
-    }
 }
 
 @Composable
@@ -209,55 +206,48 @@ fun Autonomous(modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Column(horizontalAlignment = Alignment.Start) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                val change: (Boolean) -> Unit = {
-                    shootPreload = it
-                    if (it) {
-                        approxFuel += 8
-                    } else {
-                        approxFuel = maxOf(approxFuel - 8, 0)
+        verticalArrangement =
+            Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.Start) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    val change: (Boolean) -> Unit = {
+                        shootPreload = it
+                        if (it) {
+                            approxFuel += 8
+                        } else {
+                            approxFuel = maxOf(approxFuel - 8, 0)
+                        }
+                    }
+                    Checkbox(shootPreload, onCheckedChange = change)
+                    Text(
+                        stringResource(Res.string.auto_shoot_preload),
+                        modifier = Modifier.clickable { change(!shootPreload) })
+                }
+                val fuelOutpost = remember { mutableStateOf(false) }
+                val fuelDepot = remember { mutableStateOf(false) }
+                val fuelNeutral = remember { mutableStateOf(false) }
+                val stateArr =
+                    arrayOf(
+                        fuelNeutral to Res.string.auto_fuel_neutral,
+                        fuelDepot to Res.string.auto_fuel_depot,
+                        fuelOutpost to Res.string.auto_fuel_outpost)
+                for ((mutableState, str) in stateArr) {
+                    var state by mutableState
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            state,
+                            onCheckedChange = { state = it },
+                        )
+                        Text(
+                            stringResource(str),
+                            modifier = Modifier.clickable { state = !state })
                     }
                 }
-                Checkbox(
-                    shootPreload,
-                    onCheckedChange = change
-                )
-                Text(
-                    stringResource(Res.string.auto_shoot_preload),
-                    modifier = Modifier.clickable { change (!shootPreload)}
-                )
             }
-            val fuelOutpost = remember { mutableStateOf(false) }
-            val fuelDepot = remember { mutableStateOf(false) }
-            val fuelNeutral = remember { mutableStateOf(false) }
-            val stateArr = arrayOf(
-                fuelNeutral to Res.string.auto_fuel_neutral,
-                fuelDepot to Res.string.auto_fuel_depot,
-                fuelOutpost to Res.string.auto_fuel_outpost
-            )
-            for ((mutableState, str) in stateArr) {
-                var state by mutableState
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(
-                        state,
-                        onCheckedChange = { state = it },
-                    )
-                    Text(
-                        stringResource(str),
-                        modifier = Modifier.clickable {
-                            state = !state
-                        }
-                    )
-                }
-            }
-        }
 
-        ApproxFuel(_approxFuel, modifier = Modifier.fillMaxWidth())
-    }
+            ApproxFuel(_approxFuel, modifier = Modifier.fillMaxWidth())
+        }
 }
 
 data class TeleopData(
@@ -362,30 +352,30 @@ fun Quantitative() {
         }) { targetScreen ->
             Box {
                 val modifier = Modifier.fillMaxWidth().align(Alignment.Center)
-                    when (targetScreen) {
-                        0 -> Prematch()
-                        1 -> Autonomous(modifier)
-                2 -> Teleoperated()
-                3 -> Endgame()
-            }
-            Button(
-                onClick = {currentScreen++},
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) { Text("Next") }
-
-            if (targetScreen > 0) {
-                Button(
-                    onClick = {
-                        // make sure that we don't go under 0
-                        if (currentScreen > 0) {
-                            currentScreen--
-                        }
-                    },
-                    modifier = Modifier.align(Alignment.BottomStart)
-                            ) {
-                                Text("Previous")
-                            }
-                    }
+                when (targetScreen) {
+                    0 -> Prematch()
+                    1 -> Autonomous(modifier)
+                    2 -> Teleoperated()
+                    3 -> Endgame()
                 }
+                Button(
+                    onClick = { currentScreen++ },
+                    modifier = Modifier.align(Alignment.BottomEnd)) {
+                        Text("Next")
+                    }
+
+                if (targetScreen > 0) {
+                    Button(
+                        onClick = {
+                            // make sure that we don't go under 0
+                            if (currentScreen > 0) {
+                                currentScreen--
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.BottomStart)) {
+                            Text("Previous")
+                        }
+                }
+            }
         }
 }
