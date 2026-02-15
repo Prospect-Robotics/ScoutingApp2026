@@ -171,6 +171,7 @@ fun Endgame() {
         Button(onClick = {numCycles++}){
             Text("+")
         }
+
     }
 
 }
