@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 import scoutingapp2026.composeapp.generated.resources.Res
 import scoutingapp2026.composeapp.generated.resources.compose_multiplatform
 
@@ -24,7 +23,14 @@ import scoutingapp2026.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
-        Surface(modifier = Modifier.safeContentPadding().fillMaxSize()) {
+        var showContent by remember { mutableStateOf(false) }
+        Column(
+            modifier =
+                Modifier.background(MaterialTheme.colorScheme.primaryContainer)
+                    .safeContentPadding()
+                    .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Quantitative()
         }
     }
