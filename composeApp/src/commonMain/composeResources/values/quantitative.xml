@@ -3,4 +3,7 @@
     <string name="auto_fuel_outpost">Fuel from Outpost</string>
     <string name="auto_fuel_depot">Fuel from Depot</string>
     <string name="auto_fuel_neutral">Fuel from Neutral Zone</string>
+    <string name="cycles">Cycles</string>
+    <string name="herding">Herding</string>
+    <string name="incap">incapacitated</string>
 </resources>
