@@ -53,6 +53,9 @@ import scoutingapp2026.composeapp.generated.resources.auto_shoot_preload
 import scoutingapp2026.composeapp.generated.resources.matchNumber
 import scoutingapp2026.composeapp.generated.resources.nameOfPerson
 import scoutingapp2026.composeapp.generated.resources.teamNumber
+import scoutingapp2026.composeapp.generated.resources.cycles
+import scoutingapp2026.composeapp.generated.resources.herding
+import scoutingapp2026.composeapp.generated.resources.incap
 
 @Composable
 fun IncrementButton(
@@ -291,14 +294,8 @@ fun Teleoperated(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                        Text("Teleoperated", fontSize = 20.sp)
-                        // Text(stringResource(Res.string.teleoperated),
-                        // fontSize = 20.sp)
-
-                        IncrementButton(
-                            "Cycles", teleopData.Cycles, enabled = true)
-                        // IncrementButton(stringResource(Res.string.cycles),
-                        // teleopData.Cycles, enabled = true)
+                         IncrementButton(stringResource(Res.string.cycles),
+                        teleopData.Cycles, enabled = true)
                     }
             }
             val fuelAmount = mutableIntStateOf(0)
@@ -308,14 +305,12 @@ fun Teleoperated(
                 verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     ApproxFuel(fuelCounter = fuelAmount, enabled = true)
                 }
-            // Text(stringResource(Res.string.herding), fontSize = 20.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Herding", fontSize = 20.sp)
+                Text(stringResource(Res.string.herding), fontSize = 20.sp)
                 Checkbox(herding, onCheckedChange = { herding = !herding })
             }
-            // Text(stringResource(Res.string.incapacitated), fontSize = 20.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Incapacitated", fontSize = 20.sp)
+                Text(stringResource(Res.string.incap), fontSize = 20.sp)
                 Checkbox(
                     incapacitatedMark != null,
                     onCheckedChange = { curr ->
