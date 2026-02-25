@@ -411,7 +411,7 @@ fun Quantitative() {
                         },
                         modifier = Modifier.align(Alignment.TopEnd)
                     ) {
-                        Text("Next")
+                        Text(stringResource(Res.string.next))
                     }
                 } else {
                     Button(
@@ -419,7 +419,7 @@ fun Quantitative() {
                             TODO("Implement Submit!")
                         }
                     ) {
-                        Text("Submit")
+                        Text(stringResource(Res.string.submit))
                     }
                 }
 
@@ -432,7 +432,7 @@ fun Quantitative() {
                             }
                         },
                         modifier = Modifier.align(Alignment.TopStart)) {
-                            Text("Previous")
+                            Text(stringResource(Res.string.prev))
                         }
                 }
             }
