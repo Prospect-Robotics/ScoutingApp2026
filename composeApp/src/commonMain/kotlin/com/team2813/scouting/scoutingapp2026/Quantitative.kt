@@ -145,11 +145,10 @@ fun ApproxFuel(
 
 @Composable
 @Preview(showBackground = true)
-fun Prematch(modifier: Modifier = Modifier) {
+fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = viewModel()) {
+    val preMatchData =  viewModel.preMatchData
     Column(modifier, verticalArrangement = Arrangement.spacedBy(30.dp)) {
-        var scoutingTeamNumber by remember {
-            mutableStateOf("")
-        } // Name of the Scouting Team #
+        var scoutingTeamNumber by preMatchData.scoutingTeamNumber // Name of the Scouting Team #
         TextField(
             value = scoutingTeamNumber,
             onValueChange = { scoutingTeamNumber = it },
@@ -157,17 +156,13 @@ fun Prematch(modifier: Modifier = Modifier) {
             label = { Text(stringResource(Res.string.teamNumber)) },
             keyboardOptions =
                 KeyboardOptions(keyboardType = KeyboardType.Number))
-        var nameOfHuman by remember {
-            mutableStateOf("")
-        } // Name of the Human being that is scouting
+        var nameOfHuman by preMatchData.nameOfHuman // Name of the Human being that is scouting
         TextField(
             value = nameOfHuman,
             onValueChange = { nameOfHuman = it },
             singleLine = true,
             label = { Text(stringResource(Res.string.nameOfPerson)) })
-        var matchNumber by remember {
-            mutableStateOf("")
-        } // the match that the Human is scouting
+        var matchNumber by preMatchData.matchNumber // the match that the Human is scouting
         TextField(
             value = matchNumber,
             onValueChange = { matchNumber = it },

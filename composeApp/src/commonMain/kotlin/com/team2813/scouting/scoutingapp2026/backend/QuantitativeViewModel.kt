@@ -22,7 +22,15 @@ class TeleopData {
     val incapacitatedTime = mutableStateOf(Duration.ZERO)
     val Herding = mutableStateOf(false)
 }
+
+class PreMatchData {
+    val scoutingTeamNumber = mutableStateOf("")
+    val nameOfHuman = mutableStateOf("")
+    val matchNumber = mutableStateOf("")
+}
+
 class QuantitativeViewModel : ViewModel() {
     val autoData = AutoData()
     val teleopData = TeleopData()
+    val preMatchData = PreMatchData()
 }
