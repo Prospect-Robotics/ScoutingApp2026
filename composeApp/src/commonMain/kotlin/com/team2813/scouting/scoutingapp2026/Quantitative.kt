@@ -181,9 +181,9 @@ fun Prematch(modifier: Modifier = Modifier) {
 @Composable
 @Preview(showBackground = true)
 fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = viewModel()) {
-    var approxFuel by viewModel.approxFuel
-    var shootPreload by viewModel.shootPreload
-    val cycleNumber by viewModel.cycleNumber
+    val autoData = viewModel.autoData
+    var approxFuel by autoData.approxFuel
+    var shootPreload by autoData.shootPreload
 
     Column(
         modifier = modifier,
@@ -207,10 +207,10 @@ fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel =
                 }
                 val stateArr =
                     arrayOf(
-                        viewModel.fuelNeutral to Res.string.auto_fuel_neutral,
-                        viewModel.fuelDepot to Res.string.auto_fuel_depot,
-                        viewModel.fuelOutpost to Res.string.auto_fuel_outpost,
-                        viewModel.climb to Res.string.climb)
+                        autoData.fuelNeutral to Res.string.auto_fuel_neutral,
+                        autoData.fuelDepot to Res.string.auto_fuel_depot,
+                        autoData.fuelOutpost to Res.string.auto_fuel_outpost,
+                        autoData.climb to Res.string.climb)
                 for ((mutableState, str) in stateArr) {
                     var state by mutableState
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -224,28 +224,19 @@ fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel =
                     }
                 }
             }
-            ApproxFuel(viewModel.approxFuel, modifier = Modifier.fillMaxWidth())
+            ApproxFuel(autoData.approxFuel, modifier = Modifier.fillMaxWidth())
 
-            IncrementButton("Cycle counter", viewModel.cycleNumber)
+            IncrementButton("Cycle counter", autoData.cycleNumber)
         }
 }
-
-data class TeleopData(
-    val Cycles: MutableState<Int> = mutableStateOf(0),
-    val Fuel: MutableState<Int> = mutableStateOf(0),
-    val incapacitatedTime: MutableState<Duration> =
-        mutableStateOf(Duration.ZERO),
-    val Herding: MutableState<Boolean> = mutableStateOf(false),
-)
 
 @Composable
 @Preview(showBackground = true)
 fun Teleoperated(
     modifier: Modifier = Modifier,
-    teleopData: TeleopData = remember { TeleopData() }
+    viewModel: QuantitativeViewModel = viewModel(),
 ) {
-    var cycles by teleopData.Cycles
-    var fuel by teleopData.Fuel
+    val teleopData = viewModel.teleopData;
     var herding by teleopData.Herding
     var incapacitatedMark: TimeSource.Monotonic.ValueTimeMark? by remember {
         mutableStateOf(null)
@@ -278,7 +269,7 @@ fun Teleoperated(
                 modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    ApproxFuel(fuelCounter = fuelAmount, enabled = true)
+                    ApproxFuel(fuelCounter = teleopData.Fuel, enabled = true)
                 }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(Res.string.herding), fontSize = 20.sp)
