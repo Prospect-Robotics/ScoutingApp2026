@@ -4,6 +4,12 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -11,9 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,8 +26,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.time.Duration
-import kotlin.time.TimeSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -400,11 +401,27 @@ fun Quantitative() {
                     2 -> Teleoperated()
                     3 -> Endgame()
                 }
-                Button(
-                    onClick = { currentScreen++ },
-                    modifier = Modifier.align(Alignment.BottomEnd)) {
+                if (targetScreen < 3) {
+                    Button(
+                        onClick = {
+                            // make sure that we don't go over 3
+                            if (currentScreen < 3) {
+                                currentScreen++
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
                         Text("Next")
                     }
+                } else {
+                    Button(
+                        onClick = {
+                            TODO("Implement Submit!")
+                        }
+                    ) {
+                        Text("Submit")
+                    }
+                }
 
                 if (targetScreen > 0) {
                     Button(
@@ -414,7 +431,7 @@ fun Quantitative() {
                                 currentScreen--
                             }
                         },
-                        modifier = Modifier.align(Alignment.BottomStart)) {
+                        modifier = Modifier.align(Alignment.TopStart)) {
                             Text("Previous")
                         }
                 }
