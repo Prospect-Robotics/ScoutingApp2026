@@ -26,6 +26,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -143,8 +145,8 @@ fun ApproxFuel(
 
 @Composable
 @Preview(showBackground = true)
-fun Prematch() {
-    Column(verticalArrangement = Arrangement.spacedBy(30.dp)) {
+fun Prematch(modifier: Modifier = Modifier) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(30.dp)) {
         var scoutingTeamNumber by remember {
             mutableStateOf("")
         } // Name of the Scouting Team #
@@ -178,11 +180,10 @@ fun Prematch() {
 
 @Composable
 @Preview(showBackground = true)
-fun Autonomous(modifier: Modifier = Modifier) {
-    val _approxFuel = remember { mutableIntStateOf(0) }
-    var approxFuel by _approxFuel
-    var shootPreload by remember { mutableStateOf(false) }
-    val cycleNumber = remember { mutableStateOf(0) }
+fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = viewModel()) {
+    var approxFuel by viewModel.approxFuel
+    var shootPreload by viewModel.shootPreload
+    val cycleNumber by viewModel.cycleNumber
 
     Column(
         modifier = modifier,
@@ -204,14 +205,12 @@ fun Autonomous(modifier: Modifier = Modifier) {
                         stringResource(Res.string.auto_shoot_preload),
                         modifier = Modifier.clickable { change(!shootPreload) })
                 }
-                val fuelOutpost = remember { mutableStateOf(false) }
-                val fuelDepot = remember { mutableStateOf(false) }
-                val fuelNeutral = remember { mutableStateOf(false) }
                 val stateArr =
                     arrayOf(
-                        fuelNeutral to Res.string.auto_fuel_neutral,
-                        fuelDepot to Res.string.auto_fuel_depot,
-                        fuelOutpost to Res.string.auto_fuel_outpost)
+                        viewModel.fuelNeutral to Res.string.auto_fuel_neutral,
+                        viewModel.fuelDepot to Res.string.auto_fuel_depot,
+                        viewModel.fuelOutpost to Res.string.auto_fuel_outpost,
+                        viewModel.climb to Res.string.climb)
                 for ((mutableState, str) in stateArr) {
                     var state by mutableState
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -225,10 +224,9 @@ fun Autonomous(modifier: Modifier = Modifier) {
                     }
                 }
             }
+            ApproxFuel(viewModel.approxFuel, modifier = Modifier.fillMaxWidth())
 
-            ApproxFuel(_approxFuel, modifier = Modifier.fillMaxWidth())
-
-            IncrementButton("Cycle counter", cycleNumber)
+            IncrementButton("Cycle counter", viewModel.cycleNumber)
         }
 }
 
@@ -306,14 +304,14 @@ fun Teleoperated(
 
 @Composable
 @Preview(showBackground = true)
-fun Endgame() {
+fun Endgame(modifier: Modifier = Modifier) {
     //    Text("This is the Endgame screen!")
     var selectedClimb by remember { mutableStateOf("None") }
     var selectedSide by remember { mutableStateOf("N/A") }
     var numCycles by remember { mutableStateOf(0) }
     var isFailed by remember { mutableStateOf(false) }
 
-    Column {
+    Column(modifier) {
         Text("Climb Level")
 
         listOf("None", "L1", "L2", "L3").forEach { level ->
@@ -380,7 +378,7 @@ fun climbTimer() {
 @Composable
 @Preview(showBackground = true, widthDp = 300, heightDp = 400)
 fun Quantitative() {
-    var currentScreen by remember { mutableStateOf(2) }
+    var currentScreen by remember { mutableStateOf(0) }
     AnimatedContent(
         currentScreen,
         modifier = Modifier.fillMaxSize(),
@@ -393,13 +391,13 @@ fun Quantitative() {
                     slideOutHorizontally { width -> width } + fadeOut()
             }
         }) { targetScreen ->
-            Box {
+            Box(Modifier.fillMaxSize()) {
                 val modifier = Modifier.fillMaxWidth().align(Alignment.Center)
                 when (targetScreen) {
-                    0 -> Prematch()
+                    0 -> Prematch(modifier)
                     1 -> Autonomous(modifier)
-                    2 -> Teleoperated()
-                    3 -> Endgame()
+                    2 -> Teleoperated(modifier)
+                    3 -> Endgame(modifier)
                 }
                 if (targetScreen < 3) {
                     Button(
@@ -417,7 +415,8 @@ fun Quantitative() {
                     Button(
                         onClick = {
                             TODO("Implement Submit!")
-                        }
+                        },
+                        modifier = Modifier.align(Alignment.TopEnd)
                     ) {
                         Text(stringResource(Res.string.submit))
                     }
@@ -431,9 +430,10 @@ fun Quantitative() {
                                 currentScreen--
                             }
                         },
-                        modifier = Modifier.align(Alignment.TopStart)) {
-                            Text(stringResource(Res.string.prev))
-                        }
+                        modifier = Modifier.align(Alignment.TopStart)
+                    ) {
+                        Text(stringResource(Res.string.prev))
+                    }
                 }
             }
         }
