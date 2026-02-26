@@ -1,0 +1,13 @@
+<resources>
+    <!--This is kannada translations  -->
+    <string name="matchNumber">Match sankhye enu?</string>
+    <string name="nameOfPerson">ninna hesarenu!</string>
+    <string name="teamNumber">Team sankhye eshtu?</string>
+    <string name="auto_shoot_preload">Shot Ready maadi</string>
+    <string name="auto_fuel_outpost">Outpost inda Indhana</string>
+    <string name="auto_fuel_depot">Depot inda Indhana</string>
+    <string name="auto_fuel_neutral">Nuetral Zone inda Indhana</string>
+    <string name="cycles">Cycles</string>
+    <string name="herding">Herding</string>
+    <string name="incap">incapacitated</string>
+</resources>

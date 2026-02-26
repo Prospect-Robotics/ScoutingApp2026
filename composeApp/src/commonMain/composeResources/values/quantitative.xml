@@ -1,4 +1,7 @@
 <resources>
+    <string name="matchNumber">Match Number???</string>
+    <string name="nameOfPerson">Your Name Human!</string>
+    <string name="teamNumber">TeamNumber ;)</string>
     <string name="auto_shoot_preload">Shot Preload</string>
     <string name="auto_fuel_outpost">Fuel from Outpost</string>
     <string name="auto_fuel_depot">Fuel from Depot</string>
