@@ -50,12 +50,12 @@ import scoutingapp2026.composeapp.generated.resources.auto_fuel_depot
 import scoutingapp2026.composeapp.generated.resources.auto_fuel_neutral
 import scoutingapp2026.composeapp.generated.resources.auto_fuel_outpost
 import scoutingapp2026.composeapp.generated.resources.auto_shoot_preload
-import scoutingapp2026.composeapp.generated.resources.matchNumber
-import scoutingapp2026.composeapp.generated.resources.nameOfPerson
-import scoutingapp2026.composeapp.generated.resources.teamNumber
 import scoutingapp2026.composeapp.generated.resources.cycles
 import scoutingapp2026.composeapp.generated.resources.herding
 import scoutingapp2026.composeapp.generated.resources.incap
+import scoutingapp2026.composeapp.generated.resources.matchNumber
+import scoutingapp2026.composeapp.generated.resources.nameOfPerson
+import scoutingapp2026.composeapp.generated.resources.teamNumber
 
 @Composable
 fun IncrementButton(
@@ -294,8 +294,10 @@ fun Teleoperated(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                         IncrementButton(stringResource(Res.string.cycles),
-                        teleopData.Cycles, enabled = true)
+                        IncrementButton(
+                            stringResource(Res.string.cycles),
+                            teleopData.Cycles,
+                            enabled = true)
                     }
             }
             val fuelAmount = mutableIntStateOf(0)
