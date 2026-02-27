@@ -1,0 +1,14 @@
+<resources>
+    <!--This is mandarin traditional translations -->
+    <!--This is for emulator testing will update once I get translations -->
+    <string name="matchNumber">1</string>
+    <string name="nameOfPerson">2</string>
+    <string name="teamNumber">3</string>
+    <string name="auto_shoot_preload">4</string>
+    <string name="auto_fuel_outpost">5</string>
+    <string name="auto_fuel_depot">6</string>
+    <string name="auto_fuel_neutral">7</string>
+    <string name="cycles">Cycles</string>
+    <string name="herding">Herding</string>
+    <string name="incap">incapacitated</string>
+</resources>

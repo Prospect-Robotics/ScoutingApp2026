@@ -1,4 +1,5 @@
 <resources>
+    <!--This is mandarin simplified translations  -->
     <string name="matchNumber">比赛编号</string>
     <string name="nameOfPerson">记录人姓名</string>
     <string name="teamNumber">队伍编号</string>
