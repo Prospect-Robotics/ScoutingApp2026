@@ -16,7 +16,7 @@ class SubmitRepository {
         }
     }
 
-    private data class SubmitData(
+    data class SubmitData(
         val preMatchData: PreMatchData,
         val autonomousData: AutoData,
         val teleopData: TeleopData,
@@ -50,4 +50,11 @@ class SubmitRepository {
             //entry.664881520 => Nubmer of Cycles
             //entry.290189424 => Failed Climb
         }
+    suspend fun submitPost(data: SubmitData) {
+        formBuilder.postFormData(data)
+    }
+
+    fun getSubmitLink(data: SubmitData): String {
+        return formBuilder.getAutomaticSubmitLink(data);
+    }
 }

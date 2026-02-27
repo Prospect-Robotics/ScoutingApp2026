@@ -26,8 +26,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -145,7 +146,7 @@ fun ApproxFuel(
 
 @Composable
 @Preview(showBackground = true)
-fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = viewModel()) {
+fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = koinViewModel()) {
     val preMatchData =  viewModel.preMatchData
     Column(modifier, verticalArrangement = Arrangement.spacedBy(30.dp)) {
         var scoutingTeamNumber by preMatchData.scoutingTeamNumber // Name of the Scouting Team #
@@ -175,7 +176,7 @@ fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = v
 
 @Composable
 @Preview(showBackground = true)
-fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = viewModel()) {
+fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = koinViewModel()) {
     val autoData = viewModel.autoData
     var approxFuel by autoData.approxFuel
     var shootPreload by autoData.shootPreload
@@ -229,9 +230,9 @@ fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel =
 @Preview(showBackground = true)
 fun Teleoperated(
     modifier: Modifier = Modifier,
-    viewModel: QuantitativeViewModel = viewModel(),
+    viewModel: QuantitativeViewModel = koinViewModel(),
 ) {
-    val teleopData = viewModel.teleopData;
+    val teleopData = viewModel.teleopData
     var herding by teleopData.Herding
     var incapacitatedMark: TimeSource.Monotonic.ValueTimeMark? by remember {
         mutableStateOf(null)
@@ -259,7 +260,6 @@ fun Teleoperated(
                             enabled = true)
                     }
             }
-            val fuelAmount = mutableIntStateOf(0)
             Column(
                 modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -363,7 +363,7 @@ fun climbTimer() {
 
 @Composable
 @Preview(showBackground = true, widthDp = 300, heightDp = 400)
-fun Quantitative() {
+fun Quantitative(navController: NavHostController) {
     var currentScreen by remember { mutableStateOf(0) }
     AnimatedContent(
         currentScreen,
@@ -398,9 +398,13 @@ fun Quantitative() {
                         Text(stringResource(Res.string.next))
                     }
                 } else {
+                    val coroutineScope = rememberCoroutineScope()
+                    val viewModel: QuantitativeViewModel = koinViewModel()
                     Button(
                         onClick = {
-                            TODO("Implement Submit!")
+                            coroutineScope.launch {
+                                viewModel.submit(navController)
+                            }
                         },
                         modifier = Modifier.align(Alignment.TopEnd)
                     ) {

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.serialization)
 }
 
 val version: String = "1.0.0"
@@ -48,8 +49,10 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.androidx.navigation)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.qrose)
-            implementation(libs.qrcode)
+//            implementation(libs.qrcode)
             implementation(libs.ktor.core)
             implementation(libs.ktor.json)
             implementation(libs.ktor.contentNegotiation)

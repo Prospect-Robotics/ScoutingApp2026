@@ -1,9 +1,12 @@
 package com.team2813.scouting.scoutingapp2026.backend
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import androidx.navigation.navOptions
+import com.team2813.scouting.scoutingapp2026.Home
+import com.team2813.scouting.scoutingapp2026.QRCode
 import kotlin.time.Duration
 
 class AutoData {
@@ -29,8 +32,18 @@ class PreMatchData {
     val matchNumber = mutableStateOf("")
 }
 
-class QuantitativeViewModel : ViewModel() {
+class QuantitativeViewModel(private val submitRepository: SubmitRepository) : ViewModel() {
     val autoData = AutoData()
     val teleopData = TeleopData()
     val preMatchData = PreMatchData()
+    suspend fun submit(navController: NavController) {
+        val allData = SubmitRepository.SubmitData(preMatchData, autoData, teleopData)
+        try {
+            submitRepository.submitPost(allData)
+        } catch (_: Exception) {
+            val url = submitRepository.getSubmitLink(allData)
+            val route = QRCode(url)
+            navController.navigate(route, navOptions { popUpTo(Home) })
+        }
+    }
 }
