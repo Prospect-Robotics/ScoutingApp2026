@@ -22,12 +22,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlin.time.TimeMark
 
 class MutableIntStateProvider: PreviewParameterProvider<MutableIntState> {
     override val values: Sequence<MutableIntState> = sequenceOf(mutableIntStateOf(0))
@@ -174,6 +176,28 @@ fun Endgame() {
 
     }
 
+}
+@Composable
+fun climbTimer() {
+    var seconds by remember { mutableStateOf(0) }
+    var running by remember { mutableStateOf(false) }
+
+    LaunchedEffect(running) {
+        while (running) {
+            kotlinx.coroutines.delay(1000)
+            seconds++
+        }
+    }
+
+    Column {
+        Text("$seconds")
+        Button(onClick = { running = !running }) {
+            Text(if (running) "Stop" else "Start")
+        }
+        Button(onClick = { seconds = 0 }) {
+            Text("Reset")
+        }
+    }
 }
 
 @Composable
