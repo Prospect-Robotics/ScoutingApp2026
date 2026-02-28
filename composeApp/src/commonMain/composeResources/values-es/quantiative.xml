@@ -1,0 +1,12 @@
+<resources>
+    <string name="matchNumber">¿Número de Partido?</string>
+    <string name="nameOfPerson">¡Tu Nombre!</string>
+    <string name="teamNumber">¿Número de Equipo?</string>
+    <string name="auto_shoot_preload">Disparo Precargado</string>
+    <string name="auto_fuel_outpost">Combustible del Puesto de Avanzada</string>
+    <string name="auto_fuel_depot">Combustible del Depósito</string>
+    <string name="auto_fuel_neutral">Combustible de la Zona Neutral</string>
+    <string name="cycles">Cycles</string>
+    <string name="herding">Herding</string>
+    <string name="incap">incapacitated</string>
+</resources>

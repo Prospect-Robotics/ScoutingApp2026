@@ -1,0 +1,13 @@
+<resources>
+    <!--This is mandarin simplified translations  -->
+    <string name="matchNumber">比赛编号</string>
+    <string name="nameOfPerson">记录人姓名</string>
+    <string name="teamNumber">队伍编号</string>
+    <string name="auto_shoot_preload">预装弹发射数</string>
+    <string name="auto_fuel_outpost">来自前哨站的燃料数</string>
+    <string name="auto_fuel_depot">来自补给站的燃料数</string>
+    <string name="auto_fuel_neutral">来自中立区的燃料数</string>
+    <string name="cycles">Cycles</string>
+    <string name="herding">Herding</string>
+    <string name="incap">incapacitated</string>
+</resources>

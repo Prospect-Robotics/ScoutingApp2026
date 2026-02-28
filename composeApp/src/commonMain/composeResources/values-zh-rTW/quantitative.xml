@@ -1,0 +1,14 @@
+<resources>
+    <!--This is mandarin traditional translations -->
+    <!--This is for emulator testing will update once I get translations -->
+    <string name="matchNumber">匹配號碼</string>
+    <string name="nameOfPerson">隊員姓名</string>
+    <string name="teamNumber">隊號</string>
+    <string name="auto_shoot_preload">射擊預裝</string>
+    <string name="auto_fuel_outpost">球來自隊員裝球位</string>
+    <string name="auto_fuel_depot">球來自取球倉</string>
+    <string name="auto_fuel_neutral">球來自中立區</string>
+    <string name="cycles">:循環次數</string>
+    <string name="herding">運球</string>
+    <string name="incap">停止運作</string>
+</resources>
