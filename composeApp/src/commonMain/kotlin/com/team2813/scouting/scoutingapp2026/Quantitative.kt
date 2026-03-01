@@ -378,8 +378,11 @@ fun ClimbTimer(state: MutableIntState) {
 
 @Composable
 @Preview(showBackground = true, widthDp = 300, heightDp = 400)
-fun Quantitative(navController: NavHostController) {
-    var currentScreen by remember { mutableStateOf(0) }
+fun Quantitative(
+    navController: NavHostController,
+    viewModel: QuantitativeViewModel = koinViewModel(),
+) {
+    var currentScreen by viewModel.currentScreen
     AnimatedContent(
         currentScreen,
         modifier = Modifier.fillMaxSize(),

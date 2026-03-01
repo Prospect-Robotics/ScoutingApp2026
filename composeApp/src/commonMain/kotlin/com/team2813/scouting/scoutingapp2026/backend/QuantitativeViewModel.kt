@@ -46,6 +46,7 @@ class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
     val teleopData = TeleopData()
     val preMatchData = PreMatchData()
     val endgameData = EndgameData()
+    val currentScreen = mutableIntStateOf(0)
 
     suspend fun submit(navController: NavController) {
         val allData =
