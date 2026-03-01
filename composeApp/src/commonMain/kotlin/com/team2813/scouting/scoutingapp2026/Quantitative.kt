@@ -1,29 +1,13 @@
 package com.team2813.scouting.scoutingapp2026
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -45,17 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import scoutingapp2026.composeapp.generated.resources.Res
-import scoutingapp2026.composeapp.generated.resources.auto_fuel_depot
-import scoutingapp2026.composeapp.generated.resources.auto_fuel_neutral
-import scoutingapp2026.composeapp.generated.resources.auto_fuel_outpost
-import scoutingapp2026.composeapp.generated.resources.auto_shoot_preload
-import scoutingapp2026.composeapp.generated.resources.matchNumber
-import scoutingapp2026.composeapp.generated.resources.nameOfPerson
-import scoutingapp2026.composeapp.generated.resources.teamNumber
-import scoutingapp2026.composeapp.generated.resources.cycles
-import scoutingapp2026.composeapp.generated.resources.herding
-import scoutingapp2026.composeapp.generated.resources.incap
+import scoutingapp2026.composeapp.generated.resources.*
 
 @Composable
 fun IncrementButton(
@@ -294,8 +268,10 @@ fun Teleoperated(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                         IncrementButton(stringResource(Res.string.cycles),
-                        teleopData.Cycles, enabled = true)
+                        IncrementButton(
+                            stringResource(Res.string.cycles),
+                            teleopData.Cycles,
+                            enabled = true)
                     }
             }
             val fuelAmount = mutableIntStateOf(0)
@@ -330,7 +306,74 @@ fun Teleoperated(
 @Composable
 @Preview(showBackground = true)
 fun Endgame() {
-    Text("This is the Endgame screen!")
+    //    Text("This is the Endgame screen!")
+    var selectedClimb by remember { mutableStateOf("None") }
+    var selectedSide by remember { mutableStateOf("N/A") }
+    var numCycles by remember { mutableStateOf(0) }
+    var isFailed by remember { mutableStateOf(false) }
+
+    Column {
+        Text("Climb Level")
+
+        listOf("None", "L1", "L2", "L3").forEach { level ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = (selectedClimb == level),
+                    onClick = {
+                        selectedClimb = level
+                        if (level == "None") {
+                            selectedSide = "N/A"
+                        }
+                    })
+                Text(text = level)
+            }
+        }
+
+        if (selectedClimb != "None") {
+            Text("Select Side")
+            listOf("Left", "Middle", "Right").forEach { side ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = (selectedSide == side),
+                        onClick = { selectedSide = side })
+                    Text(text = side)
+                }
+            }
+
+            Text("Failed")
+            Checkbox(checked = isFailed, onCheckedChange = { isFailed = it })
+        }
+
+        Text(text = "Cycles")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { if (numCycles > 0) numCycles-- }) { Text("-") }
+        }
+
+        Text(text = numCycles.toString())
+
+        Button(onClick = { numCycles++ }) { Text("+") }
+    }
+}
+
+@Composable
+fun climbTimer() {
+    var seconds by remember { mutableStateOf(0) }
+    var running by remember { mutableStateOf(false) }
+
+    LaunchedEffect(running) {
+        while (running) {
+            kotlinx.coroutines.delay(1000)
+            seconds++
+        }
+    }
+
+    Column {
+        Text("$seconds")
+        Button(onClick = { running = !running }) {
+            Text(if (running) "Stop" else "Start")
+        }
+        Button(onClick = { seconds = 0 }) { Text("Reset") }
+    }
 }
 
 @Composable
