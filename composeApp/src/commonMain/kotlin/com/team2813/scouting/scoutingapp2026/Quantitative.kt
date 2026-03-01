@@ -22,13 +22,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.time.Duration
+import kotlin.time.TimeSource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import scoutingapp2026.composeapp.generated.resources.*
-import kotlin.time.Duration
-import kotlin.time.TimeSource
 
 @Composable
 fun IncrementButton(
@@ -267,8 +267,10 @@ fun Teleoperated(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                         IncrementButton(stringResource(Res.string.cycles),
-                        teleopData.Cycles, enabled = true)
+                        IncrementButton(
+                            stringResource(Res.string.cycles),
+                            teleopData.Cycles,
+                            enabled = true)
                     }
             }
             val fuelAmount = mutableIntStateOf(0)
@@ -303,16 +305,16 @@ fun Teleoperated(
 @Composable
 @Preview(showBackground = true)
 fun Endgame() {
-//    Text("This is the Endgame screen!")
+    //    Text("This is the Endgame screen!")
     var selectedClimb by remember { mutableStateOf("None") }
     var selectedSide by remember { mutableStateOf("N/A") }
-    var numCycles by remember {mutableStateOf(0)}
+    var numCycles by remember { mutableStateOf(0) }
     var isFailed by remember { mutableStateOf(false) }
 
     Column {
         Text("Climb Level")
 
-        listOf("None","L1","L2","L3").forEach { level ->
+        listOf("None", "L1", "L2", "L3").forEach { level ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
                     selected = (selectedClimb == level),
@@ -321,48 +323,37 @@ fun Endgame() {
                         if (level == "None") {
                             selectedSide = "N/A"
                         }
-                    }
-                )
+                    })
                 Text(text = level)
             }
         }
 
-        if(selectedClimb != "None") {
+        if (selectedClimb != "None") {
             Text("Select Side")
-            listOf("Left","Middle","Right").forEach { side ->
+            listOf("Left", "Middle", "Right").forEach { side ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = (selectedSide == side), onClick = {
-                            selectedSide = side
-                        })
+                    RadioButton(
+                        selected = (selectedSide == side),
+                        onClick = { selectedSide = side })
                     Text(text = side)
                 }
             }
 
             Text("Failed")
-            Checkbox(
-                checked = isFailed,
-                onCheckedChange = {isFailed = it}
-            )
-
+            Checkbox(checked = isFailed, onCheckedChange = { isFailed = it })
         }
 
-
         Text(text = "Cycles")
-        Row(verticalAlignment = Alignment.CenterVertically){
-            Button(onClick = { if (numCycles > 0) numCycles--}){
-                Text("-")
-            }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { if (numCycles > 0) numCycles-- }) { Text("-") }
         }
 
         Text(text = numCycles.toString())
 
-        Button(onClick = {numCycles++}){
-            Text("+")
-        }
-
+        Button(onClick = { numCycles++ }) { Text("+") }
     }
-
 }
+
 @Composable
 fun climbTimer() {
     var seconds by remember { mutableStateOf(0) }
@@ -380,9 +371,7 @@ fun climbTimer() {
         Button(onClick = { running = !running }) {
             Text(if (running) "Stop" else "Start")
         }
-        Button(onClick = { seconds = 0 }) {
-            Text("Reset")
-        }
+        Button(onClick = { seconds = 0 }) { Text("Reset") }
     }
 }
 
