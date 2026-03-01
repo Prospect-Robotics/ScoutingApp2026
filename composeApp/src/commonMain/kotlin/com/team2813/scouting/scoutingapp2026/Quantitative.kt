@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
+import kotlin.time.Duration
 import kotlin.time.TimeSource
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -36,7 +37,6 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.*
-import kotlin.time.Duration
 
 @Composable
 fun IncrementButton(
@@ -241,7 +241,9 @@ fun Autonomous(
 @Composable
 @Preview(showBackground = true)
 fun TimeElement(timeSpent: MutableState<Duration>) {
-    var mark: TimeSource.Monotonic.ValueTimeMark? by remember { mutableStateOf(null)}
+    var mark: TimeSource.Monotonic.ValueTimeMark? by remember {
+        mutableStateOf(null)
+    }
     var time by timeSpent
     DisposableEffect(timeSpent) {
         onDispose {
@@ -249,14 +251,14 @@ fun TimeElement(timeSpent: MutableState<Duration>) {
             mark = null
         }
     }
-    Checkbox(mark != null, onCheckedChange = {
-        mark?.let {
-            time += it.elapsedNow()
-            mark = null
-        } ?: run {
-            mark = TimeSource.Monotonic.markNow()
-        }
-    })
+    Checkbox(
+        mark != null,
+        onCheckedChange = {
+            mark?.let {
+                time += it.elapsedNow()
+                mark = null
+            } ?: run { mark = TimeSource.Monotonic.markNow() }
+        })
 }
 
 @Composable
@@ -316,8 +318,13 @@ fun Endgame(
     var selectedSide by endgameData.selectedSide
     var numCycles by endgameData.numCycles
     var isFailed by endgameData.isFailed
+    var notes by endgameData.notes
 
     Column(modifier) {
+        TextField(
+            value = notes,
+            onValueChange = { notes = it },
+            label = { Text(stringResource(Res.string.notes)) })
         Text("Climb Level")
 
         listOf("None", "L1", "L2", "L3").forEach { level ->

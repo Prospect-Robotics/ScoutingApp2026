@@ -39,6 +39,7 @@ class EndgameData {
     val numCycles = mutableIntStateOf(0)
     val isFailed = mutableStateOf(false)
     val climbTime = mutableIntStateOf(0)
+    val notes = mutableStateOf("")
 }
 
 class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
