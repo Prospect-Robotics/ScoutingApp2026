@@ -59,7 +59,7 @@ class SubmitRepository {
                     addMutable("entry.581821715", EndgameData::selectedSide)
                     addMutable("entry.664881520", EndgameData::numCycles)
                     addMutable("entry.290189424", EndgameData::isFailed)
-                    addMutable("entry.1299729214", EndgameData::climbTime)
+                    addMutable("entry.1299729214", EndgameData::climbTime) { "${it * 1000}" }
                 }
             }
 

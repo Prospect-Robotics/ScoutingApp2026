@@ -347,11 +347,10 @@ fun Endgame(
         Text(text = "Cycles")
         Row(verticalAlignment = Alignment.CenterVertically) {
             Button(onClick = { if (numCycles > 0) numCycles-- }) { Text("-") }
+            Text(text = numCycles.toString())
+            Button(onClick = { numCycles++ }) { Text("+") }
         }
-
-        Text(text = numCycles.toString())
-
-        Button(onClick = { numCycles++ }) { Text("+") }
+        Text("Climb Timer")
         ClimbTimer(endgameData.climbTime)
     }
 }
