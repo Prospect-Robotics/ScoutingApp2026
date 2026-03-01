@@ -32,15 +32,25 @@ class PreMatchData {
     val matchNumber = mutableStateOf("")
 }
 
+class EndgameData {
+    val selectedClimb = mutableStateOf("None")
+    val selectedSide = mutableStateOf("N/A")
+    val numCycles = mutableIntStateOf(0)
+    val isFailed = mutableStateOf(false)
+    val climbTime = mutableIntStateOf(0)
+}
+
 class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
     ViewModel() {
     val autoData = AutoData()
     val teleopData = TeleopData()
     val preMatchData = PreMatchData()
+    val endgameData = EndgameData()
 
     suspend fun submit(navController: NavController) {
         val allData =
-            SubmitRepository.SubmitData(preMatchData, autoData, teleopData)
+            SubmitRepository.SubmitData(
+                preMatchData, autoData, teleopData, endgameData)
         try {
             submitRepository.submitPost(allData)
         } catch (_: Exception) {

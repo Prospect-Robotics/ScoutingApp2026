@@ -20,6 +20,7 @@ class SubmitRepository {
         val preMatchData: PreMatchData,
         val autonomousData: AutoData,
         val teleopData: TeleopData,
+        val endgameData: EndgameData,
     )
 
     private val formBuilder: FormBuilder<SubmitData> =
@@ -53,11 +54,13 @@ class SubmitRepository {
                         ::msTime)
                     addMutable("entry.1720238000", TeleopData::Herding)
                 }
-                // TODO: Add auto stuff
-                // entry.1582430388 => Selected Climb
-                // entry.581821715 => Selected Side
-                // entry.664881520 => Nubmer of Cycles
-                // entry.290189424 => Failed Climb
+                wrap(SubmitData::endgameData) {
+                    addMutable("entry.1582430388", EndgameData::selectedClimb)
+                    addMutable("entry.581821715", EndgameData::selectedSide)
+                    addMutable("entry.664881520", EndgameData::numCycles)
+                    addMutable("entry.290189424", EndgameData::isFailed)
+                    addMutable("entry.1299729214", EndgameData::climbTime)
+                }
             }
 
     suspend fun submitPost(data: SubmitData) {

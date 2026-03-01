@@ -301,12 +301,16 @@ fun Teleoperated(
 
 @Composable
 @Preview(showBackground = true)
-fun Endgame(modifier: Modifier = Modifier) {
+fun Endgame(
+    modifier: Modifier = Modifier,
+    viewModel: QuantitativeViewModel = koinViewModel()
+) {
     //    Text("This is the Endgame screen!")
-    var selectedClimb by remember { mutableStateOf("None") }
-    var selectedSide by remember { mutableStateOf("N/A") }
-    var numCycles by remember { mutableStateOf(0) }
-    var isFailed by remember { mutableStateOf(false) }
+    val endgameData = viewModel.endgameData
+    var selectedClimb by endgameData.selectedClimb
+    var selectedSide by endgameData.selectedSide
+    var numCycles by endgameData.numCycles
+    var isFailed by endgameData.isFailed
 
     Column(modifier) {
         Text("Climb Level")
@@ -348,12 +352,13 @@ fun Endgame(modifier: Modifier = Modifier) {
         Text(text = numCycles.toString())
 
         Button(onClick = { numCycles++ }) { Text("+") }
+        ClimbTimer(endgameData.climbTime)
     }
 }
 
 @Composable
-fun climbTimer() {
-    var seconds by remember { mutableStateOf(0) }
+fun ClimbTimer(state: MutableIntState) {
+    var seconds by state
     var running by remember { mutableStateOf(false) }
 
     LaunchedEffect(running) {
