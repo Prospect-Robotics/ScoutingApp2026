@@ -10,6 +10,7 @@ class JVMPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = JVMPlatform()
+
 actual fun httpClient(config: HttpClientConfig<*>.() -> Unit): HttpClient =
     HttpClient(Java) {
         config(this)

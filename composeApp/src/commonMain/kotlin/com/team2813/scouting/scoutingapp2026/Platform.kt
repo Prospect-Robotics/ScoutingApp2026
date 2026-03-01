@@ -12,9 +12,12 @@ interface Platform {
 }
 
 expect fun getPlatform(): Platform
+
 expect fun httpClient(config: HttpClientConfig<*>.() -> Unit = {}): HttpClient
 
 val commonModule: Module = module {
     single { SubmitRepository() }
-    viewModel<QuantitativeViewModel> { QuantitativeViewModel(submitRepository = get()) }
+    viewModel<QuantitativeViewModel> {
+        QuantitativeViewModel(submitRepository = get())
+    }
 }

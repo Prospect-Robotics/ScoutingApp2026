@@ -4,13 +4,13 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -146,10 +146,14 @@ fun ApproxFuel(
 
 @Composable
 @Preview(showBackground = true)
-fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = koinViewModel()) {
-    val preMatchData =  viewModel.preMatchData
+fun Prematch(
+    modifier: Modifier = Modifier,
+    viewModel: QuantitativeViewModel = koinViewModel()
+) {
+    val preMatchData = viewModel.preMatchData
     Column(modifier, verticalArrangement = Arrangement.spacedBy(30.dp)) {
-        var scoutingTeamNumber by preMatchData.scoutingTeamNumber // Name of the Scouting Team #
+        var scoutingTeamNumber by
+            preMatchData.scoutingTeamNumber // Name of the Scouting Team #
         TextField(
             value = scoutingTeamNumber,
             onValueChange = { scoutingTeamNumber = it },
@@ -157,13 +161,15 @@ fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = k
             label = { Text(stringResource(Res.string.teamNumber)) },
             keyboardOptions =
                 KeyboardOptions(keyboardType = KeyboardType.Number))
-        var nameOfHuman by preMatchData.nameOfHuman // Name of the Human being that is scouting
+        var nameOfHuman by
+            preMatchData.nameOfHuman // Name of the Human being that is scouting
         TextField(
             value = nameOfHuman,
             onValueChange = { nameOfHuman = it },
             singleLine = true,
             label = { Text(stringResource(Res.string.nameOfPerson)) })
-        var matchNumber by preMatchData.matchNumber // the match that the Human is scouting
+        var matchNumber by
+            preMatchData.matchNumber // the match that the Human is scouting
         TextField(
             value = matchNumber,
             onValueChange = { matchNumber = it },
@@ -176,7 +182,10 @@ fun Prematch(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = k
 
 @Composable
 @Preview(showBackground = true)
-fun Autonomous(modifier: Modifier = Modifier, viewModel: QuantitativeViewModel = koinViewModel()) {
+fun Autonomous(
+    modifier: Modifier = Modifier,
+    viewModel: QuantitativeViewModel = koinViewModel()
+) {
     val autoData = viewModel.autoData
     var approxFuel by autoData.approxFuel
     var shootPreload by autoData.shootPreload
@@ -393,10 +402,9 @@ fun Quantitative(navController: NavHostController) {
                                 currentScreen++
                             }
                         },
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Text(stringResource(Res.string.next))
-                    }
+                        modifier = Modifier.align(Alignment.TopEnd)) {
+                            Text(stringResource(Res.string.next))
+                        }
                 } else {
                     val coroutineScope = rememberCoroutineScope()
                     val viewModel: QuantitativeViewModel = koinViewModel()
@@ -406,10 +414,9 @@ fun Quantitative(navController: NavHostController) {
                                 viewModel.submit(navController)
                             }
                         },
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Text(stringResource(Res.string.submit))
-                    }
+                        modifier = Modifier.align(Alignment.TopEnd)) {
+                            Text(stringResource(Res.string.submit))
+                        }
                 }
 
                 if (targetScreen > 0) {
@@ -420,10 +427,9 @@ fun Quantitative(navController: NavHostController) {
                                 currentScreen--
                             }
                         },
-                        modifier = Modifier.align(Alignment.TopStart)
-                    ) {
-                        Text(stringResource(Res.string.prev))
-                    }
+                        modifier = Modifier.align(Alignment.TopStart)) {
+                            Text(stringResource(Res.string.prev))
+                        }
                 }
             }
         }

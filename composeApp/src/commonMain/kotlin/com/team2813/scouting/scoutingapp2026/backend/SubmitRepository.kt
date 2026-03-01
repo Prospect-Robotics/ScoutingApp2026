@@ -23,38 +23,48 @@ class SubmitRepository {
     )
 
     private val formBuilder: FormBuilder<SubmitData> =
-        FormBuilder.build("https://docs.google.com/forms/d/e/1FAIpQLSfsWvXdhB2BDt3N1G57wFay-UM80MOFPXS4VqGu5WPE_uo9Rg") {
-            wrap(SubmitData::preMatchData) {
-                addMutable("entry.763576937", PreMatchData::scoutingTeamNumber)
-                addMutable("entry.1229660068", PreMatchData::nameOfHuman)
-                addMutable("entry.1064933507", PreMatchData::matchNumber)
+        FormBuilder.build(
+            "https://docs.google.com/forms/d/e/1FAIpQLSfsWvXdhB2BDt3N1G57wFay-UM80MOFPXS4VqGu5WPE_uo9Rg") {
+                wrap(SubmitData::preMatchData) {
+                    addMutable(
+                        "entry.763576937", PreMatchData::scoutingTeamNumber)
+                    addMutable("entry.1229660068", PreMatchData::nameOfHuman)
+                    addMutable("entry.1064933507", PreMatchData::matchNumber)
+                }
+                wrap(SubmitData::autonomousData) {
+                    addMutable(
+                        "entry.284009297", AutoData::shootPreload, ::booleanStr)
+                    addMutable(
+                        "entry.257281052", AutoData::fuelOutpost, ::booleanStr)
+                    addMutable(
+                        "entry.1712861368", AutoData::fuelDepot, ::booleanStr)
+                    addMutable(
+                        "entry.1380976125", AutoData::fuelNeutral, ::booleanStr)
+                    addMutable("entry.672098235", AutoData::climb, ::booleanStr)
+                    addMutable("entry.420184502", AutoData::cycleNumber)
+                    addMutable("entry.554128120", AutoData::approxFuel)
+                }
+                wrap(SubmitData::teleopData) {
+                    addMutable("entry.2076833081", TeleopData::Cycles)
+                    addMutable("entry.2069256175", TeleopData::Fuel)
+                    addMutable(
+                        "entry.230562156",
+                        TeleopData::incapacitatedTime,
+                        ::msTime)
+                    addMutable("entry.1720238000", TeleopData::Herding)
+                }
+                // TODO: Add auto stuff
+                // entry.1582430388 => Selected Climb
+                // entry.581821715 => Selected Side
+                // entry.664881520 => Nubmer of Cycles
+                // entry.290189424 => Failed Climb
             }
-            wrap(SubmitData::autonomousData) {
-                addMutable("entry.284009297", AutoData::shootPreload, ::booleanStr)
-                addMutable("entry.257281052", AutoData::fuelOutpost, ::booleanStr)
-                addMutable("entry.1712861368", AutoData::fuelDepot, ::booleanStr)
-                addMutable("entry.1380976125", AutoData::fuelNeutral, ::booleanStr)
-                addMutable("entry.672098235", AutoData::climb, ::booleanStr)
-                addMutable("entry.420184502", AutoData::cycleNumber)
-                addMutable("entry.554128120", AutoData::approxFuel)
-            }
-            wrap(SubmitData::teleopData) {
-                addMutable("entry.2076833081", TeleopData::Cycles)
-                addMutable("entry.2069256175", TeleopData::Fuel)
-                addMutable("entry.230562156", TeleopData::incapacitatedTime, ::msTime)
-                addMutable("entry.1720238000", TeleopData::Herding)
-            }
-            //TODO: Add auto stuff
-            //entry.1582430388 => Selected Climb
-            //entry.581821715 => Selected Side
-            //entry.664881520 => Nubmer of Cycles
-            //entry.290189424 => Failed Climb
-        }
+
     suspend fun submitPost(data: SubmitData) {
         formBuilder.postFormData(data)
     }
 
     fun getSubmitLink(data: SubmitData): String {
-        return formBuilder.getAutomaticSubmitLink(data);
+        return formBuilder.getAutomaticSubmitLink(data)
     }
 }

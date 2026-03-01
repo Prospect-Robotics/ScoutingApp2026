@@ -13,6 +13,7 @@ class IOSPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
 actual fun httpClient(config: HttpClientConfig<*>.() -> Unit): HttpClient =
     HttpClient(Darwin) {
         config(this)

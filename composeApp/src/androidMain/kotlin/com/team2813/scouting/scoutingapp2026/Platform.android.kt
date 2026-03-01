@@ -10,6 +10,7 @@ class AndroidPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()
+
 actual fun httpClient(config: HttpClientConfig<*>.() -> Unit): HttpClient =
     HttpClient(Android) {
         config(this)

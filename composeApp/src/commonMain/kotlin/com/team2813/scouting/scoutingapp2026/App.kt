@@ -29,42 +29,40 @@ import scoutingapp2026.composeapp.generated.resources.Res
 import scoutingapp2026.composeapp.generated.resources.done
 import scoutingapp2026.composeapp.generated.resources.quantitative
 
-@Serializable
-object Home
-@Serializable
-object Quantitative
-@Serializable
-data class QRCode(val url: String)
+@Serializable object Home
+
+@Serializable object Quantitative
+
+@Serializable data class QRCode(val url: String)
 
 @Composable
 fun QRCodeScreen(url: String, navController: NavHostController) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        verticalArrangement =
+            Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            rememberQrCodePainter(url),
-            "Submit QR Code",
-            modifier = Modifier.padding(20.dp).size(300.dp)
-        )
-        Button(onClick = { navController.popBackStack() }) {
-            Text(stringResource(Res.string.done))
+        modifier = Modifier.fillMaxSize()) {
+            Image(
+                rememberQrCodePainter(url),
+                "Submit QR Code",
+                modifier = Modifier.padding(20.dp).size(300.dp))
+            Button(onClick = { navController.popBackStack() }) {
+                Text(stringResource(Res.string.done))
+            }
         }
-    }
 }
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        verticalArrangement =
+            Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Button(onClick = {navController.navigate(Quantitative)}) {
-            Text(stringResource(Res.string.quantitative))
+        modifier = Modifier.fillMaxSize()) {
+            Button(onClick = { navController.navigate(Quantitative) }) {
+                Text(stringResource(Res.string.quantitative))
+            }
         }
-    }
 }
 
 @Composable
@@ -78,17 +76,10 @@ fun App() {
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            KoinApplication({
-                modules(commonModule)
-            }) {
+            KoinApplication({ modules(commonModule) }) {
                 val navController: NavHostController = rememberNavController()
-                NavHost(
-                    navController,
-                    startDestination = Home
-                ) {
-                    composable<Home> {
-                        HomeScreen(navController)
-                    }
+                NavHost(navController, startDestination = Home) {
+                    composable<Home> { HomeScreen(navController) }
                     composable<Quantitative> { Quantitative(navController) }
                     composable<QRCode> { navBackStack ->
                         val qrcode = navBackStack.toRoute<QRCode>()

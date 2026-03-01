@@ -32,12 +32,15 @@ class PreMatchData {
     val matchNumber = mutableStateOf("")
 }
 
-class QuantitativeViewModel(private val submitRepository: SubmitRepository) : ViewModel() {
+class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
+    ViewModel() {
     val autoData = AutoData()
     val teleopData = TeleopData()
     val preMatchData = PreMatchData()
+
     suspend fun submit(navController: NavController) {
-        val allData = SubmitRepository.SubmitData(preMatchData, autoData, teleopData)
+        val allData =
+            SubmitRepository.SubmitData(preMatchData, autoData, teleopData)
         try {
             submitRepository.submitPost(allData)
         } catch (_: Exception) {
