@@ -324,7 +324,8 @@ fun Endgame(
         TextField(
             value = notes,
             onValueChange = { notes = it },
-            label = { Text(stringResource(Res.string.notes)) })
+            label = { Text(stringResource(Res.string.notes)) },
+            singleLine = false)
         Text("Climb Level")
 
         listOf("None", "L1", "L2", "L3").forEach { level ->
