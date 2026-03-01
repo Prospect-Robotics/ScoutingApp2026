@@ -23,6 +23,7 @@ class TeleopData {
     val Cycles = mutableIntStateOf(0)
     val Fuel = mutableIntStateOf(0)
     val incapacitatedTime = mutableStateOf(Duration.ZERO)
+    val defenseTime = mutableStateOf(Duration.ZERO)
     val Herding = mutableStateOf(false)
 }
 

@@ -36,6 +36,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.*
+import kotlin.time.Duration
 
 @Composable
 fun IncrementButton(
@@ -239,22 +240,33 @@ fun Autonomous(
 
 @Composable
 @Preview(showBackground = true)
+fun TimeElement(timeSpent: MutableState<Duration>) {
+    var mark: TimeSource.Monotonic.ValueTimeMark? by remember { mutableStateOf(null)}
+    var time by timeSpent
+    DisposableEffect(timeSpent) {
+        onDispose {
+            mark?.let { time += it.elapsedNow() }
+            mark = null
+        }
+    }
+    Checkbox(mark != null, onCheckedChange = {
+        mark?.let {
+            time += it.elapsedNow()
+            mark = null
+        } ?: run {
+            mark = TimeSource.Monotonic.markNow()
+        }
+    })
+}
+
+@Composable
+@Preview(showBackground = true)
 fun Teleoperated(
     modifier: Modifier = Modifier,
     viewModel: QuantitativeViewModel = koinViewModel(),
 ) {
     val teleopData = viewModel.teleopData
     var herding by teleopData.Herding
-    var incapacitatedMark: TimeSource.Monotonic.ValueTimeMark? by remember {
-        mutableStateOf(null)
-    }
-    var incapacitatedTime by teleopData.incapacitatedTime
-    DisposableEffect(teleopData) {
-        onDispose {
-            incapacitatedMark?.let { incapacitatedTime += it.elapsedNow() }
-            incapacitatedMark = null
-        }
-    }
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -283,18 +295,11 @@ fun Teleoperated(
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(Res.string.incap), fontSize = 20.sp)
-                Checkbox(
-                    incapacitatedMark != null,
-                    onCheckedChange = { curr ->
-                        if (curr) {
-                            incapacitatedMark = TimeSource.Monotonic.markNow()
-                        } else {
-                            incapacitatedMark?.let {
-                                incapacitatedTime += it.elapsedNow()
-                            }
-                            incapacitatedMark = null
-                        }
-                    })
+                TimeElement(teleopData.incapacitatedTime)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(Res.string.defense), fontSize = 20.sp)
+                TimeElement(teleopData.defenseTime)
             }
         }
 }
