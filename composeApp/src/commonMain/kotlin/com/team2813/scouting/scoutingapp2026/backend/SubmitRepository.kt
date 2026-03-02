@@ -52,16 +52,19 @@ class SubmitRepository {
                         "entry.230562156",
                         TeleopData::incapacitatedTime,
                         ::msTime)
-                    addMutable("entry.1720238000", TeleopData::Herding)
+                    addMutable(
+                        "entry.1720238000", TeleopData::Herding, ::booleanStr)
                 }
                 wrap(SubmitData::endgameData) {
                     addMutable("entry.1582430388", EndgameData::selectedClimb)
                     addMutable("entry.581821715", EndgameData::selectedSide)
                     addMutable("entry.664881520", EndgameData::numCycles)
-                    addMutable("entry.290189424", EndgameData::isFailed)
+                    addMutable(
+                        "entry.290189424", EndgameData::isFailed, ::booleanStr)
                     addMutable("entry.1299729214", EndgameData::climbTime) {
                         "${it * 1000}"
                     }
+                    addMutable("entry.1931120353", EndgameData::notes)
                 }
             }
 

@@ -2,10 +2,12 @@ package com.team2813.scouting2025.backend
 
 import androidx.compose.runtime.MutableState
 import com.team2813.scouting.scoutingapp2026.httpClient
+import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.utils.io.core.Closeable
 
 private val hexLookup =
@@ -148,9 +150,13 @@ class FormBuilder<T> private constructor(builder: Builder<T>) : Closeable {
     }
 
     suspend fun postFormData(data: T) {
-        httpClient.post("$formUrl/formResponse") {
-            setBody(generatePostData(data))
-            contentType(ContentType.Application.FormUrlEncoded)
+        val resp =
+            httpClient.post("$formUrl/formResponse") {
+                setBody(generatePostData(data))
+                contentType(ContentType.Application.FormUrlEncoded)
+            }
+        if (!resp.status.isSuccess()) {
+            throw RuntimeException("Non-success status code")
         }
     }
 

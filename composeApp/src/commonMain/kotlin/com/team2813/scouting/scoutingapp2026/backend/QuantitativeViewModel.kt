@@ -7,7 +7,11 @@ import androidx.navigation.NavController
 import androidx.navigation.navOptions
 import com.team2813.scouting.scoutingapp2026.Home
 import com.team2813.scouting.scoutingapp2026.QRCode
+import io.ktor.util.logging.Logger
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.withTimeout
+import org.koin.compose.koinInject
 
 class AutoData {
     val shootPreload = mutableStateOf(false)
@@ -55,7 +59,8 @@ class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
             SubmitRepository.SubmitData(
                 preMatchData, autoData, teleopData, endgameData)
         try {
-            submitRepository.submitPost(allData)
+            withTimeout(5.seconds) { submitRepository.submitPost(allData) }
+            navController.popBackStack(Home, false)
         } catch (_: Exception) {
             val url = submitRepository.getSubmitLink(allData)
             val route = QRCode(url)

@@ -12,8 +12,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,6 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
+import io.ktor.utils.io.core.toByteArray
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -42,10 +48,27 @@ fun QRCodeScreen(url: String, navController: NavHostController) {
             Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()) {
-            Image(
-                rememberQrCodePainter(url),
-                "Submit QR Code",
-                modifier = Modifier.padding(20.dp).size(300.dp))
+            // 2956 bytes is the maximum size the URL can handle. Since the url
+            // is guaranteed to be plain ASCII (due to URL encoding), the length
+            // is equivalent to the size in bytes
+            if (url.length > 2956) {
+                Text("Url is too long to generate a QR Code.")
+                val clipboard = LocalClipboard.current
+                val coroutineScope = rememberCoroutineScope()
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            clipboard.setClipEntry(clipEntryOf(url))
+                        }
+                    }) {
+                        Text("Copy Url")
+                    }
+            } else {
+                Image(
+                    rememberQrCodePainter(url),
+                    "Submit QR Code",
+                    modifier = Modifier.padding(20.dp).size(300.dp))
+            }
             Button(onClick = { navController.popBackStack() }) {
                 Text(stringResource(Res.string.done))
             }

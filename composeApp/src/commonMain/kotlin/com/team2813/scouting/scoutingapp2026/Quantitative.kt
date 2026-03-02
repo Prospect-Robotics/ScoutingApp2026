@@ -29,13 +29,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.logger.Logger
 import scoutingapp2026.composeapp.generated.resources.*
 
 @Composable
@@ -396,6 +401,8 @@ fun Quantitative(
     viewModel: QuantitativeViewModel = koinViewModel(),
 ) {
     var currentScreen by viewModel.currentScreen
+    val mutableCanSubmit = remember { MutableStateFlow(true) }
+    val canSubmit by mutableCanSubmit.collectAsState()
     AnimatedContent(
         currentScreen,
         modifier = Modifier.fillMaxSize(),
@@ -432,10 +439,17 @@ fun Quantitative(
                     val viewModel: QuantitativeViewModel = koinViewModel()
                     Button(
                         onClick = {
-                            coroutineScope.launch {
-                                viewModel.submit(navController)
+                            // Only submit if `canSubmit` was true, and we just
+                            // updated it to false.
+                            // Uses atomics to ensure it can't submit twice
+                            if (mutableCanSubmit.compareAndSet(
+                                expect = true, update = false)) {
+                                coroutineScope.launch {
+                                    viewModel.submit(navController)
+                                }
                             }
                         },
+                        enabled = canSubmit,
                         modifier = Modifier.align(Alignment.TopEnd)) {
                             Text(stringResource(Res.string.submit))
                         }
