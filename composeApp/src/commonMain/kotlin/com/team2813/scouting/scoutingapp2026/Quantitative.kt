@@ -30,18 +30,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.logger.Logger
 import scoutingapp2026.composeapp.generated.resources.*
 
 @Composable
@@ -324,7 +321,10 @@ fun Endgame(
     var notes by endgameData.notes
 
     Column(
-        modifier.verticalScroll(rememberScrollState()).wrapContentHeight(),
+        modifier
+            .verticalScroll(rememberScrollState())
+            .wrapContentHeight()
+            .padding(top = 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
             TextField(
                 value = notes,
@@ -418,7 +418,12 @@ fun Quantitative(
                     slideOutHorizontally { width -> width } + fadeOut()
             }
         }) { targetScreen ->
-            Box(Modifier.fillMaxSize()) {
+            Box(Modifier.fillMaxSize().padding(horizontal = 5.dp)) {
+                val screenName =
+                    stringArrayResource(Res.array.screen_name)[targetScreen]
+                Text(
+                    screenName,
+                    Modifier.align(Alignment.TopCenter).padding(13.dp))
                 val modifier = Modifier.fillMaxWidth().align(Alignment.Center)
                 when (targetScreen) {
                     0 -> Prematch(modifier)
