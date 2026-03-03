@@ -3,8 +3,9 @@ package com.team2813.scouting.scoutingapp2026
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RadioButton
@@ -322,52 +323,57 @@ fun Endgame(
     var isFailed by endgameData.isFailed
     var notes by endgameData.notes
 
-    Column(modifier) {
-        TextField(
-            value = notes,
-            onValueChange = { notes = it },
-            label = { Text(stringResource(Res.string.notes)) },
-            singleLine = false)
-        Text("Climb Level")
+    Column(
+        modifier.verticalScroll(rememberScrollState()).wrapContentHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            TextField(
+                value = notes,
+                onValueChange = { notes = it },
+                label = { Text(stringResource(Res.string.notes)) },
+                singleLine = false)
+            Text("Climb Level")
 
-        listOf("None", "L1", "L2", "L3").forEach { level ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = (selectedClimb == level),
-                    onClick = {
-                        selectedClimb = level
-                        if (level == "None") {
-                            selectedSide = "N/A"
-                        }
-                    })
-                Text(text = level)
-            }
-        }
-
-        if (selectedClimb != "None") {
-            Text("Select Side")
-            listOf("Left", "Middle", "Right").forEach { side ->
+            listOf("None", "L1", "L2", "L3").forEach { level ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = (selectedSide == side),
-                        onClick = { selectedSide = side })
-                    Text(text = side)
+                        selected = (selectedClimb == level),
+                        onClick = {
+                            selectedClimb = level
+                            if (level == "None") {
+                                selectedSide = "N/A"
+                            }
+                        })
+                    Text(text = level)
                 }
             }
 
-            Text("Failed")
-            Checkbox(checked = isFailed, onCheckedChange = { isFailed = it })
-        }
+            if (selectedClimb != "None") {
+                Text("Select Side")
+                listOf("Left", "Middle", "Right").forEach { side ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = (selectedSide == side),
+                            onClick = { selectedSide = side })
+                        Text(text = side)
+                    }
+                }
 
-        Text(text = "Cycles")
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { if (numCycles > 0) numCycles-- }) { Text("-") }
-            Text(text = numCycles.toString())
-            Button(onClick = { numCycles++ }) { Text("+") }
+                Text("Failed")
+                Checkbox(
+                    checked = isFailed, onCheckedChange = { isFailed = it })
+            }
+
+            Text(text = "Cycles")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Button(onClick = { if (numCycles > 0) numCycles-- }) {
+                    Text("-")
+                }
+                Text(text = numCycles.toString())
+                Button(onClick = { numCycles++ }) { Text("+") }
+            }
+            Text("Climb Timer")
+            ClimbTimer(endgameData.climbTime)
         }
-        Text("Climb Timer")
-        ClimbTimer(endgameData.climbTime)
-    }
 }
 
 @Composable
