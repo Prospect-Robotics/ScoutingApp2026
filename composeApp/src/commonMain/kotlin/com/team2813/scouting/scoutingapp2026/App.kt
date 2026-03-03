@@ -2,22 +2,24 @@ package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -25,15 +27,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
-import io.ktor.utils.io.core.toByteArray
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import scoutingapp2026.composeapp.generated.resources.Res
+import scoutingapp2026.composeapp.generated.resources.blue2813
 import scoutingapp2026.composeapp.generated.resources.done
+import scoutingapp2026.composeapp.generated.resources.frc_rebuilt_color_icon
+import scoutingapp2026.composeapp.generated.resources.gear_heads_logo
+import scoutingapp2026.composeapp.generated.resources.gearheads_2026_logo_light
 import scoutingapp2026.composeapp.generated.resources.quantitative
+import scoutingapp2026.composeapp.generated.resources.rebuilt_logo
+import scoutingapp2026.composeapp.generated.resources.yellow2813
 
 @Serializable object Home
 
@@ -77,36 +85,62 @@ fun QRCodeScreen(url: String, navController: NavHostController) {
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    Column(
-        verticalArrangement =
-            Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()) {
-            Button(onClick = { navController.navigate(Quantitative) }) {
-                Text(stringResource(Res.string.quantitative))
+    Box {
+        Image(
+            painterResource(Res.drawable.frc_rebuilt_color_icon),
+            stringResource(Res.string.rebuilt_logo),
+            modifier =
+                Modifier.fillMaxWidth(0.25F)
+                    .align(Alignment.TopCenter)
+                    .padding(top = 25.dp))
+        Column(
+            verticalArrangement =
+                Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().align(Alignment.Center)) {
+                Button(onClick = { navController.navigate(Quantitative) }) {
+                    Text(stringResource(Res.string.quantitative))
+                }
             }
-        }
+        val bottomImage =
+            if (isSystemInDarkTheme()) {
+                Res.drawable.yellow2813
+            } else {
+                Res.drawable.blue2813
+            }
+        Image(
+            painterResource(bottomImage),
+            stringResource(Res.string.gear_heads_logo),
+            modifier =
+                Modifier.fillMaxWidth(0.25F)
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 25.dp))
+    }
 }
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        Column(
-            modifier =
-                Modifier.background(MaterialTheme.colorScheme.primaryContainer)
-                    .safeContentPadding()
-                    .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            KoinApplication({ modules(commonModule) }) {
-                val navController: NavHostController = rememberNavController()
-                NavHost(navController, startDestination = Home) {
-                    composable<Home> { HomeScreen(navController) }
-                    composable<Quantitative> { Quantitative(navController) }
-                    composable<QRCode> { navBackStack ->
-                        val qrcode = navBackStack.toRoute<QRCode>()
-                        QRCodeScreen(qrcode.url, navController)
+    GearHeadsTheme {
+        Surface {
+            Column(
+                modifier =
+                    Modifier.background(
+                            MaterialTheme.colorScheme.primaryContainer)
+                        .safeContentPadding()
+                        .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                KoinApplication({ modules(commonModule) }) {
+                    val navController: NavHostController =
+                        rememberNavController()
+                    NavHost(navController, startDestination = Home) {
+                        composable<Home> { HomeScreen(navController) }
+                        composable<Quantitative> { Quantitative(navController) }
+                        composable<QRCode> { navBackStack ->
+                            val qrcode = navBackStack.toRoute<QRCode>()
+                            QRCodeScreen(qrcode.url, navController)
+                        }
                     }
                 }
             }

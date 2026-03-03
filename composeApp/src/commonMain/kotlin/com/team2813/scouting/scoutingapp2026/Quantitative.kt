@@ -159,33 +159,37 @@ fun Prematch(
     viewModel: QuantitativeViewModel = koinViewModel()
 ) {
     val preMatchData = viewModel.preMatchData
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(30.dp)) {
-        var scoutingTeamNumber by
-            preMatchData.scoutingTeamNumber // Name of the Scouting Team #
-        TextField(
-            value = scoutingTeamNumber,
-            onValueChange = { scoutingTeamNumber = it },
-            singleLine = true,
-            label = { Text(stringResource(Res.string.teamNumber)) },
-            keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Number))
-        var nameOfHuman by
-            preMatchData.nameOfHuman // Name of the Human being that is scouting
-        TextField(
-            value = nameOfHuman,
-            onValueChange = { nameOfHuman = it },
-            singleLine = true,
-            label = { Text(stringResource(Res.string.nameOfPerson)) })
-        var matchNumber by
-            preMatchData.matchNumber // the match that the Human is scouting
-        TextField(
-            value = matchNumber,
-            onValueChange = { matchNumber = it },
-            singleLine = true,
-            label = { Text(stringResource(Res.string.matchNumber)) },
-            keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Number))
-    }
+    Column(
+        modifier,
+        verticalArrangement = Arrangement.spacedBy(30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            var scoutingTeamNumber by
+                preMatchData.scoutingTeamNumber // Name of the Scouting Team #
+            TextField(
+                value = scoutingTeamNumber,
+                onValueChange = { scoutingTeamNumber = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.teamNumber)) },
+                keyboardOptions =
+                    KeyboardOptions(keyboardType = KeyboardType.Number))
+            var nameOfHuman by
+                preMatchData
+                    .nameOfHuman // Name of the Human being that is scouting
+            TextField(
+                value = nameOfHuman,
+                onValueChange = { nameOfHuman = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.nameOfPerson)) })
+            var matchNumber by
+                preMatchData.matchNumber // the match that the Human is scouting
+            TextField(
+                value = matchNumber,
+                onValueChange = { matchNumber = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.matchNumber)) },
+                keyboardOptions =
+                    KeyboardOptions(keyboardType = KeyboardType.Number))
+        }
 }
 
 @Composable
@@ -279,17 +283,10 @@ fun Teleoperated(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement =
             Arrangement.spacedBy(10.dp, Alignment.CenterVertically)) {
-            Row(modifier = modifier, verticalAlignment = Alignment.Top) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                        IncrementButton(
-                            stringResource(Res.string.cycles),
-                            teleopData.Cycles,
-                            enabled = true)
-                    }
-            }
+            IncrementButton(
+                stringResource(Res.string.cycles),
+                teleopData.Cycles,
+                enabled = true)
             Column(
                 modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
