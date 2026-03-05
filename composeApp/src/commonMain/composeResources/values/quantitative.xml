@@ -5,5 +5,17 @@
     <string name="auto_fuel_neutral">Fuel from Neutral Zone</string>
     <string name="cycles">Cycles</string>
     <string name="herding">Herding</string>
-    <string name="incap">incapacitated</string>
+    <string name="incap">Incapacitated</string>
+    <string name="defense">Defense</string>
+    <string name="next">Next</string>
+    <string name="prev">Previous</string>
+    <string name="submit">Submit</string>
+    <string name="climb">Climb</string>
+    <string name="notes">Notes</string>
+    <string-array name="screen_name">
+        <item>Prematch</item>
+        <item>Autonomous</item>
+        <item>Teleop</item>
+        <item>Endgame</item>
+    </string-array>
 </resources>

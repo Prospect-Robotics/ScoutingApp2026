@@ -3,17 +3,21 @@ package com.team2813.scouting.scoutingapp2026
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +27,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import kotlin.time.Duration
 import kotlin.time.TimeSource
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.*
 
 @Composable
@@ -142,46 +152,53 @@ fun ApproxFuel(
 
 @Composable
 @Preview(showBackground = true)
-fun Prematch() {
-    Column(verticalArrangement = Arrangement.spacedBy(30.dp)) {
-        var scoutingTeamNumber by remember {
-            mutableStateOf("")
-        } // Name of the Scouting Team #
-        TextField(
-            value = scoutingTeamNumber,
-            onValueChange = { scoutingTeamNumber = it },
-            singleLine = true,
-            label = { Text(stringResource(Res.string.teamNumber)) },
-            keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Number))
-        var nameOfHuman by remember {
-            mutableStateOf("")
-        } // Name of the Human being that is scouting
-        TextField(
-            value = nameOfHuman,
-            onValueChange = { nameOfHuman = it },
-            singleLine = true,
-            label = { Text(stringResource(Res.string.nameOfPerson)) })
-        var matchNumber by remember {
-            mutableStateOf("")
-        } // the match that the Human is scouting
-        TextField(
-            value = matchNumber,
-            onValueChange = { matchNumber = it },
-            singleLine = true,
-            label = { Text(stringResource(Res.string.matchNumber)) },
-            keyboardOptions =
-                KeyboardOptions(keyboardType = KeyboardType.Number))
-    }
+fun Prematch(
+    modifier: Modifier = Modifier,
+    viewModel: QuantitativeViewModel = koinViewModel()
+) {
+    val preMatchData = viewModel.preMatchData
+    Column(
+        modifier,
+        verticalArrangement = Arrangement.spacedBy(30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            var scoutingTeamNumber by
+                preMatchData.scoutingTeamNumber // Name of the Scouting Team #
+            TextField(
+                value = scoutingTeamNumber,
+                onValueChange = { scoutingTeamNumber = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.teamNumber)) },
+                keyboardOptions =
+                    KeyboardOptions(keyboardType = KeyboardType.Number))
+            var nameOfHuman by
+                preMatchData
+                    .nameOfHuman // Name of the Human being that is scouting
+            TextField(
+                value = nameOfHuman,
+                onValueChange = { nameOfHuman = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.nameOfPerson)) })
+            var matchNumber by
+                preMatchData.matchNumber // the match that the Human is scouting
+            TextField(
+                value = matchNumber,
+                onValueChange = { matchNumber = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.matchNumber)) },
+                keyboardOptions =
+                    KeyboardOptions(keyboardType = KeyboardType.Number))
+        }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun Autonomous(modifier: Modifier = Modifier) {
-    val _approxFuel = remember { mutableIntStateOf(0) }
-    var approxFuel by _approxFuel
-    var shootPreload by remember { mutableStateOf(false) }
-    val cycleNumber = remember { mutableStateOf(0) }
+fun Autonomous(
+    modifier: Modifier = Modifier,
+    viewModel: QuantitativeViewModel = koinViewModel()
+) {
+    val autoData = viewModel.autoData
+    var approxFuel by autoData.approxFuel
+    var shootPreload by autoData.shootPreload
 
     Column(
         modifier = modifier,
@@ -203,14 +220,12 @@ fun Autonomous(modifier: Modifier = Modifier) {
                         stringResource(Res.string.auto_shoot_preload),
                         modifier = Modifier.clickable { change(!shootPreload) })
                 }
-                val fuelOutpost = remember { mutableStateOf(false) }
-                val fuelDepot = remember { mutableStateOf(false) }
-                val fuelNeutral = remember { mutableStateOf(false) }
                 val stateArr =
                     arrayOf(
-                        fuelNeutral to Res.string.auto_fuel_neutral,
-                        fuelDepot to Res.string.auto_fuel_depot,
-                        fuelOutpost to Res.string.auto_fuel_outpost)
+                        autoData.fuelNeutral to Res.string.auto_fuel_neutral,
+                        autoData.fuelDepot to Res.string.auto_fuel_depot,
+                        autoData.fuelOutpost to Res.string.auto_fuel_outpost,
+                        autoData.climb to Res.string.climb)
                 for ((mutableState, str) in stateArr) {
                     var state by mutableState
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -224,62 +239,57 @@ fun Autonomous(modifier: Modifier = Modifier) {
                     }
                 }
             }
+            ApproxFuel(autoData.approxFuel, modifier = Modifier.fillMaxWidth())
 
-            ApproxFuel(_approxFuel, modifier = Modifier.fillMaxWidth())
-
-            IncrementButton("Cycle counter", cycleNumber)
+            IncrementButton("Cycle counter", autoData.cycleNumber)
         }
 }
 
-data class TeleopData(
-    val Cycles: MutableState<Int> = mutableStateOf(0),
-    val Fuel: MutableState<Int> = mutableStateOf(0),
-    val incapacitatedTime: MutableState<Duration> =
-        mutableStateOf(Duration.ZERO),
-    val Herding: MutableState<Boolean> = mutableStateOf(false),
-)
+@Composable
+@Preview(showBackground = true)
+fun TimeElement(timeSpent: MutableState<Duration>) {
+    var mark: TimeSource.Monotonic.ValueTimeMark? by remember {
+        mutableStateOf(null)
+    }
+    var time by timeSpent
+    DisposableEffect(timeSpent) {
+        onDispose {
+            mark?.let { time += it.elapsedNow() }
+            mark = null
+        }
+    }
+    Checkbox(
+        mark != null,
+        onCheckedChange = {
+            mark?.let {
+                time += it.elapsedNow()
+                mark = null
+            } ?: run { mark = TimeSource.Monotonic.markNow() }
+        })
+}
 
 @Composable
 @Preview(showBackground = true)
 fun Teleoperated(
     modifier: Modifier = Modifier,
-    teleopData: TeleopData = remember { TeleopData() }
+    viewModel: QuantitativeViewModel = koinViewModel(),
 ) {
-    var cycles by teleopData.Cycles
-    var fuel by teleopData.Fuel
+    val teleopData = viewModel.teleopData
     var herding by teleopData.Herding
-    var incapacitatedMark: TimeSource.Monotonic.ValueTimeMark? by remember {
-        mutableStateOf(null)
-    }
-    var incapacitatedTime by teleopData.incapacitatedTime
-    DisposableEffect(teleopData) {
-        onDispose {
-            incapacitatedMark?.let { incapacitatedTime += it.elapsedNow() }
-            incapacitatedMark = null
-        }
-    }
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement =
             Arrangement.spacedBy(10.dp, Alignment.CenterVertically)) {
-            Row(modifier = modifier, verticalAlignment = Alignment.Top) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                        IncrementButton(
-                            stringResource(Res.string.cycles),
-                            teleopData.Cycles,
-                            enabled = true)
-                    }
-            }
-            val fuelAmount = mutableIntStateOf(0)
+            IncrementButton(
+                stringResource(Res.string.cycles),
+                teleopData.Cycles,
+                enabled = true)
             Column(
                 modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    ApproxFuel(fuelCounter = fuelAmount, enabled = true)
+                    ApproxFuel(fuelCounter = teleopData.Fuel, enabled = true)
                 }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(Res.string.herding), fontSize = 20.sp)
@@ -287,77 +297,88 @@ fun Teleoperated(
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(Res.string.incap), fontSize = 20.sp)
-                Checkbox(
-                    incapacitatedMark != null,
-                    onCheckedChange = { curr ->
-                        if (curr) {
-                            incapacitatedMark = TimeSource.Monotonic.markNow()
-                        } else {
-                            incapacitatedMark?.let {
-                                incapacitatedTime += it.elapsedNow()
-                            }
-                            incapacitatedMark = null
-                        }
-                    })
+                TimeElement(teleopData.incapacitatedTime)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(Res.string.defense), fontSize = 20.sp)
+                TimeElement(teleopData.defenseTime)
             }
         }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun Endgame() {
+fun Endgame(
+    modifier: Modifier = Modifier,
+    viewModel: QuantitativeViewModel = koinViewModel()
+) {
     //    Text("This is the Endgame screen!")
-    var selectedClimb by remember { mutableStateOf("None") }
-    var selectedSide by remember { mutableStateOf("N/A") }
-    var numCycles by remember { mutableStateOf(0) }
-    var isFailed by remember { mutableStateOf(false) }
+    val endgameData = viewModel.endgameData
+    var selectedClimb by endgameData.selectedClimb
+    var selectedSide by endgameData.selectedSide
+    var numCycles by endgameData.numCycles
+    var isFailed by endgameData.isFailed
+    var notes by endgameData.notes
 
-    Column {
-        Text("Climb Level")
+    Column(
+        modifier
+            .verticalScroll(rememberScrollState())
+            .wrapContentHeight()
+            .padding(top = 50.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            TextField(
+                value = notes,
+                onValueChange = { notes = it },
+                label = { Text(stringResource(Res.string.notes)) },
+                singleLine = false)
+            Text("Climb Level")
 
-        listOf("None", "L1", "L2", "L3").forEach { level ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                RadioButton(
-                    selected = (selectedClimb == level),
-                    onClick = {
-                        selectedClimb = level
-                        if (level == "None") {
-                            selectedSide = "N/A"
-                        }
-                    })
-                Text(text = level)
-            }
-        }
-
-        if (selectedClimb != "None") {
-            Text("Select Side")
-            listOf("Left", "Middle", "Right").forEach { side ->
+            listOf("None", "L1", "L2", "L3").forEach { level ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = (selectedSide == side),
-                        onClick = { selectedSide = side })
-                    Text(text = side)
+                        selected = (selectedClimb == level),
+                        onClick = {
+                            selectedClimb = level
+                            if (level == "None") {
+                                selectedSide = "N/A"
+                            }
+                        })
+                    Text(text = level)
                 }
             }
 
-            Text("Failed")
-            Checkbox(checked = isFailed, onCheckedChange = { isFailed = it })
+            if (selectedClimb != "None") {
+                Text("Select Side")
+                listOf("Left", "Middle", "Right").forEach { side ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = (selectedSide == side),
+                            onClick = { selectedSide = side })
+                        Text(text = side)
+                    }
+                }
+
+                Text("Failed")
+                Checkbox(
+                    checked = isFailed, onCheckedChange = { isFailed = it })
+            }
+
+            Text(text = "Cycles")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Button(onClick = { if (numCycles > 0) numCycles-- }) {
+                    Text("-")
+                }
+                Text(text = numCycles.toString())
+                Button(onClick = { numCycles++ }) { Text("+") }
+            }
+            Text("Climb Timer")
+            ClimbTimer(endgameData.climbTime)
         }
-
-        Text(text = "Cycles")
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { if (numCycles > 0) numCycles-- }) { Text("-") }
-        }
-
-        Text(text = numCycles.toString())
-
-        Button(onClick = { numCycles++ }) { Text("+") }
-    }
 }
 
 @Composable
-fun climbTimer() {
-    var seconds by remember { mutableStateOf(0) }
+fun ClimbTimer(state: MutableIntState) {
+    var seconds by state
     var running by remember { mutableStateOf(false) }
 
     LaunchedEffect(running) {
@@ -378,8 +399,13 @@ fun climbTimer() {
 
 @Composable
 @Preview(showBackground = true, widthDp = 300, heightDp = 400)
-fun Quantitative() {
-    var currentScreen by remember { mutableStateOf(2) }
+fun Quantitative(
+    navController: NavHostController,
+    viewModel: QuantitativeViewModel = koinViewModel(),
+) {
+    var currentScreen by viewModel.currentScreen
+    val mutableCanSubmit = remember { MutableStateFlow(true) }
+    val canSubmit by mutableCanSubmit.collectAsState()
     AnimatedContent(
         currentScreen,
         modifier = Modifier.fillMaxSize(),
@@ -392,19 +418,50 @@ fun Quantitative() {
                     slideOutHorizontally { width -> width } + fadeOut()
             }
         }) { targetScreen ->
-            Box {
+            Box(Modifier.fillMaxSize().padding(horizontal = 5.dp)) {
+                val screenName =
+                    stringArrayResource(Res.array.screen_name)[targetScreen]
+                Text(
+                    screenName,
+                    Modifier.align(Alignment.TopCenter).padding(13.dp))
                 val modifier = Modifier.fillMaxWidth().align(Alignment.Center)
                 when (targetScreen) {
-                    0 -> Prematch()
+                    0 -> Prematch(modifier)
                     1 -> Autonomous(modifier)
-                    2 -> Teleoperated()
-                    3 -> Endgame()
+                    2 -> Teleoperated(modifier)
+                    3 -> Endgame(modifier)
                 }
-                Button(
-                    onClick = { currentScreen++ },
-                    modifier = Modifier.align(Alignment.BottomEnd)) {
-                        Text("Next")
-                    }
+                if (targetScreen < 3) {
+                    Button(
+                        onClick = {
+                            // make sure that we don't go over 3
+                            if (currentScreen < 3) {
+                                currentScreen++
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.TopEnd)) {
+                            Text(stringResource(Res.string.next))
+                        }
+                } else {
+                    val coroutineScope = rememberCoroutineScope()
+                    val viewModel: QuantitativeViewModel = koinViewModel()
+                    Button(
+                        onClick = {
+                            // Only submit if `canSubmit` was true, and we just
+                            // updated it to false.
+                            // Uses atomics to ensure it can't submit twice
+                            if (mutableCanSubmit.compareAndSet(
+                                expect = true, update = false)) {
+                                coroutineScope.launch {
+                                    viewModel.submit(navController)
+                                }
+                            }
+                        },
+                        enabled = canSubmit,
+                        modifier = Modifier.align(Alignment.TopEnd)) {
+                            Text(stringResource(Res.string.submit))
+                        }
+                }
 
                 if (targetScreen > 0) {
                     Button(
@@ -414,8 +471,8 @@ fun Quantitative() {
                                 currentScreen--
                             }
                         },
-                        modifier = Modifier.align(Alignment.BottomStart)) {
-                            Text("Previous")
+                        modifier = Modifier.align(Alignment.TopStart)) {
+                            Text(stringResource(Res.string.prev))
                         }
                 }
             }

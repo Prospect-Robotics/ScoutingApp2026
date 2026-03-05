@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.serialization)
 }
 
 val version: String = "1.0.0"
@@ -35,6 +36,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.android)
+            implementation(libs.koin.core)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -45,6 +49,15 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.androidx.navigation)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.qrose)
+//            implementation(libs.qrcode)
+            implementation(libs.ktor.core)
+            implementation(libs.ktor.json)
+            implementation(libs.ktor.contentNegotiation)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.compose.backHandler)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -52,6 +65,10 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.java)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.darwin)
         }
     }
 }
