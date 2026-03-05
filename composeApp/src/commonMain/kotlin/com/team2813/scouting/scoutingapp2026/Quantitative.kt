@@ -163,21 +163,10 @@ fun Prematch(
         horizontalAlignment = Alignment.CenterHorizontally) {
             var scoutingTeamNumber by
                 preMatchData.scoutingTeamNumber // Name of the Scouting Team #
-            TextField(
-                value = scoutingTeamNumber,
-                onValueChange = { scoutingTeamNumber = it },
-                singleLine = true,
-                label = { Text(stringResource(Res.string.teamNumber)) },
-                keyboardOptions =
-                    KeyboardOptions(keyboardType = KeyboardType.Number))
             var nameOfHuman by
                 preMatchData
                     .nameOfHuman // Name of the Human being that is scouting
-            TextField(
-                value = nameOfHuman,
-                onValueChange = { nameOfHuman = it },
-                singleLine = true,
-                label = { Text(stringResource(Res.string.nameOfPerson)) })
+
             var matchNumber by
                 preMatchData.matchNumber // the match that the Human is scouting
             TextField(
@@ -185,6 +174,19 @@ fun Prematch(
                 onValueChange = { matchNumber = it },
                 singleLine = true,
                 label = { Text(stringResource(Res.string.matchNumber)) },
+                keyboardOptions =
+                    KeyboardOptions(keyboardType = KeyboardType.Number))
+            TextField(
+                value = nameOfHuman,
+                onValueChange = { nameOfHuman = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.nameOfPerson)) })
+
+            TextField(
+                value = scoutingTeamNumber,
+                onValueChange = { scoutingTeamNumber = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.teamNumber)) },
                 keyboardOptions =
                     KeyboardOptions(keyboardType = KeyboardType.Number))
         }
@@ -316,7 +318,6 @@ fun Endgame(
     val endgameData = viewModel.endgameData
     var selectedClimb by endgameData.selectedClimb
     var selectedSide by endgameData.selectedSide
-    var numCycles by endgameData.numCycles
     var isFailed by endgameData.isFailed
     var notes by endgameData.notes
 
@@ -326,53 +327,57 @@ fun Endgame(
             .wrapContentHeight()
             .padding(top = 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column {
+                    Text("Climb Level")
+                    listOf("None", "L1", "L2", "L3").forEach { level ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(
+                                selected = (selectedClimb == level),
+                                onClick = {
+                                    selectedClimb = level
+                                    if (level == "None") {
+                                        selectedSide = "N/A"
+                                    }
+                                })
+                            Text(text = level)
+                        }
+                    }
+                }
+
+                Column {
+                    if (selectedClimb != "None") {
+                        Text("Select Side")
+                        listOf("Left", "Middle", "Right").forEach { side ->
+                            Row(
+                                verticalAlignment =
+                                    Alignment.CenterVertically) {
+                                    RadioButton(
+                                        selected = (selectedSide == side),
+                                        onClick = { selectedSide = side })
+                                    Text(text = side)
+                                }
+                        }
+
+                        Text("Failed")
+                        Checkbox(
+                            checked = isFailed,
+                            onCheckedChange = { isFailed = it })
+                    }
+                }
+            }
+            IncrementButton(
+                stringResource(Res.string.cycles),
+                endgameData.numCycles,
+                enabled = true)
+            ApproxFuel(endgameData.fuel, modifier = Modifier.fillMaxWidth())
+            Text("Climb Timer")
+            ClimbTimer(endgameData.climbTime)
             TextField(
                 value = notes,
                 onValueChange = { notes = it },
                 label = { Text(stringResource(Res.string.notes)) },
                 singleLine = false)
-            Text("Climb Level")
-
-            listOf("None", "L1", "L2", "L3").forEach { level ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = (selectedClimb == level),
-                        onClick = {
-                            selectedClimb = level
-                            if (level == "None") {
-                                selectedSide = "N/A"
-                            }
-                        })
-                    Text(text = level)
-                }
-            }
-
-            if (selectedClimb != "None") {
-                Text("Select Side")
-                listOf("Left", "Middle", "Right").forEach { side ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(
-                            selected = (selectedSide == side),
-                            onClick = { selectedSide = side })
-                        Text(text = side)
-                    }
-                }
-
-                Text("Failed")
-                Checkbox(
-                    checked = isFailed, onCheckedChange = { isFailed = it })
-            }
-
-            Text(text = "Cycles")
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Button(onClick = { if (numCycles > 0) numCycles-- }) {
-                    Text("-")
-                }
-                Text(text = numCycles.toString())
-                Button(onClick = { numCycles++ }) { Text("+") }
-            }
-            Text("Climb Timer")
-            ClimbTimer(endgameData.climbTime)
         }
 }
 
