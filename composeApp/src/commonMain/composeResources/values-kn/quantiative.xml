@@ -7,7 +7,7 @@
     <string name="auto_fuel_outpost">Outpost inda Indhana</string>
     <string name="auto_fuel_depot">Depot inda Indhana</string>
     <string name="auto_fuel_neutral">Nuetral Zone inda Indhana</string>
-    <string name="cycles">Cycles</string>
-    <string name="herding">Herding</string>
-    <string name="incap">incapacitated</string>
+    <string name="cycles">Chakra</string>
+    <string name="herding">Chendugalannu ottu maaduvudu</string>
+    <string name="incap">Asamartha</string>
 </resources>
