@@ -65,6 +65,7 @@ class SubmitRepository {
                         "${it * 1000}"
                     }
                     addMutable("entry.1931120353", EndgameData::notes)
+                    addMutable("entry.747053636", EndgameData::fuel)
                 }
             }
 
