@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import kotlin.time.Duration
 import kotlin.time.TimeSource
@@ -38,6 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import org.koin.compose.KoinApplicationPreview
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.*
 
@@ -152,6 +155,13 @@ fun ApproxFuel(
 
 @Composable
 @Preview(showBackground = true)
+private fun PrematchPreview() {
+    KoinApplicationPreview(application = { modules(previewModule) }) {
+        GearHeadsTheme { Prematch() }
+    }
+}
+
+@Composable
 fun Prematch(
     modifier: Modifier = Modifier,
     viewModel: QuantitativeViewModel = koinViewModel()
@@ -193,6 +203,13 @@ fun Prematch(
 
 @Composable
 @Preview(showBackground = true)
+private fun AutonomousPreview() {
+    KoinApplicationPreview(application = { modules(previewModule) }) {
+        GearHeadsTheme { Autonomous() }
+    }
+}
+
+@Composable
 fun Autonomous(
     modifier: Modifier = Modifier,
     viewModel: QuantitativeViewModel = koinViewModel()
@@ -246,9 +263,16 @@ fun Autonomous(
         }
 }
 
+class DurationProvider : PreviewParameterProvider<MutableState<Duration>> {
+    override val values: Sequence<MutableState<Duration>> =
+        sequenceOf(mutableStateOf(Duration.ZERO))
+}
+
 @Composable
 @Preview(showBackground = true)
-fun TimeElement(timeSpent: MutableState<Duration>) {
+fun TimeElement(
+    @PreviewParameter(DurationProvider::class) timeSpent: MutableState<Duration>
+) {
     var mark: TimeSource.Monotonic.ValueTimeMark? by remember {
         mutableStateOf(null)
     }
@@ -271,6 +295,13 @@ fun TimeElement(timeSpent: MutableState<Duration>) {
 
 @Composable
 @Preview(showBackground = true)
+private fun TeleoperatedPreview() {
+    KoinApplicationPreview(application = { modules(previewModule) }) {
+        GearHeadsTheme { Teleoperated() }
+    }
+}
+
+@Composable
 fun Teleoperated(
     modifier: Modifier = Modifier,
     viewModel: QuantitativeViewModel = koinViewModel(),
@@ -309,6 +340,13 @@ fun Teleoperated(
 
 @Composable
 @Preview(showBackground = true)
+private fun EndgamePreview() {
+    KoinApplicationPreview(application = { modules(previewModule) }) {
+        GearHeadsTheme { Endgame() }
+    }
+}
+
+@Composable
 fun Endgame(
     modifier: Modifier = Modifier,
     viewModel: QuantitativeViewModel = koinViewModel()
@@ -402,7 +440,36 @@ fun ClimbTimer(state: MutableIntState) {
 }
 
 @Composable
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@Preview(
+    showBackground = true,
+    widthDp = 450,
+    heightDp = 800,
+    name = "QuantitativePreview - Light Mode",
+    group = "Quantitative")
+private fun QuantitativePreviewLight() {
+    KoinApplicationPreview(application = { modules(previewModule) }) {
+        GearHeadsTheme(isDarkMode = false) {
+            Surface { Quantitative(rememberNavController()) }
+        }
+    }
+}
+
+@Composable
+@Preview(
+    showBackground = true,
+    widthDp = 450,
+    heightDp = 800,
+    name = "QuantitativePreview - Dark Mode",
+    group = "Quantitative")
+private fun QuantitativePreviewDark() {
+    KoinApplicationPreview(application = { modules(previewModule) }) {
+        GearHeadsTheme(isDarkMode = true) {
+            Surface { Quantitative(rememberNavController()) }
+        }
+    }
+}
+
+@Composable
 fun Quantitative(
     navController: NavHostController,
     viewModel: QuantitativeViewModel = koinViewModel(),

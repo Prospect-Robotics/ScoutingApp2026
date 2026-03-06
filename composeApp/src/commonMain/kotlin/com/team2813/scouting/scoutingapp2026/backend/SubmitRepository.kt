@@ -1,9 +1,10 @@
 package com.team2813.scouting.scoutingapp2026.backend
 
+import com.team2813.scouting.scoutingapp2026.backend.SubmitRepository.SubmitData
 import com.team2813.scouting2025.backend.FormBuilder
 import kotlin.time.Duration
 
-class SubmitRepository {
+class SubmitRepositoryActual : SubmitRepository {
     private fun msTime(time: Duration): String {
         return "${time.inWholeMilliseconds}"
     }
@@ -15,13 +16,6 @@ class SubmitRepository {
             "False"
         }
     }
-
-    data class SubmitData(
-        val preMatchData: PreMatchData,
-        val autonomousData: AutoData,
-        val teleopData: TeleopData,
-        val endgameData: EndgameData,
-    )
 
     private val formBuilder: FormBuilder<SubmitData> =
         FormBuilder.build(
@@ -69,11 +63,34 @@ class SubmitRepository {
                 }
             }
 
-    suspend fun submitPost(data: SubmitData) {
+    override suspend fun submitPost(data: SubmitData) {
         formBuilder.postFormData(data)
     }
 
-    fun getSubmitLink(data: SubmitData): String {
+    override fun getSubmitLink(data: SubmitData): String {
         return formBuilder.getAutomaticSubmitLink(data)
     }
+}
+
+class SubmitRepositorySkeleton : SubmitRepository {
+    override fun getSubmitLink(data: SubmitData): String {
+        return "https://team2813.com"
+    }
+
+    override suspend fun submitPost(data: SubmitData) {
+        // no-op
+    }
+}
+
+interface SubmitRepository {
+    data class SubmitData(
+        val preMatchData: PreMatchData,
+        val autonomousData: AutoData,
+        val teleopData: TeleopData,
+        val endgameData: EndgameData,
+    )
+
+    suspend fun submitPost(data: SubmitData)
+
+    fun getSubmitLink(data: SubmitData): String
 }
