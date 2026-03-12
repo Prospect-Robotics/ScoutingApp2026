@@ -21,7 +21,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -469,6 +471,7 @@ private fun QuantitativePreviewDark() {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Quantitative(
     navController: NavHostController,
@@ -532,6 +535,13 @@ fun Quantitative(
                         modifier = Modifier.align(Alignment.TopEnd)) {
                             Text(stringResource(Res.string.submit))
                         }
+                }
+
+                // Handle the back button pressed, with it always being enabled.
+                BackHandler(true) {
+                    if (currentScreen > 0) {
+                        currentScreen--
+                    }
                 }
 
                 if (targetScreen > 0) {
