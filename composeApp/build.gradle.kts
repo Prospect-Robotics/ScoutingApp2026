@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
-val version: String = "1.1.1"
+val version: String = "1.1.2"
 
 kotlin {
     androidTarget {
