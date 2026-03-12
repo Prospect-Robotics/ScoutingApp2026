@@ -430,7 +430,7 @@ fun ClimbTimer(state: MutableIntState) {
         }
     }
 
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text("$seconds")
         Button(onClick = { running = !running }) {
             Text(if (running) "Stop" else "Start")
