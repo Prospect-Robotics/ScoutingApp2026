@@ -55,8 +55,10 @@ class EndgameData {
     val fuel = mutableIntStateOf(0)
 }
 
-class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
-    ViewModel() {
+class QuantitativeViewModel(
+    private val submitRepository: SubmitRepository,
+    private val tbaRepository: BlueAllianceRepository
+) : ViewModel() {
     val autoData = AutoData()
     val teleopData = TeleopData()
     val preMatchData = PreMatchData()
@@ -71,7 +73,7 @@ class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
     suspend fun submit(navController: NavController) {
         val allData =
             SubmitRepository.SubmitData(
-                preMatchData, autoData, teleopData, endgameData, "${uuid}:${startTime}Z")
+                preMatchData, autoData, teleopData, endgameData, tbaRepository.allData.value.eventCode ?: "", "${uuid}:${startTime}Z")
         try {
             withTimeout(5.seconds) { submitRepository.submitPost(allData) }
             navController.popBackStack(Home, false)

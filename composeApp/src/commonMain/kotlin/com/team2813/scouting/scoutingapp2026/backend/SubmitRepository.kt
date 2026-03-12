@@ -89,6 +89,7 @@ interface SubmitRepository {
         val autonomousData: AutoData,
         val teleopData: TeleopData,
         val endgameData: EndgameData,
+        val eventCode: String,
         val uuid: String,
     )
 
