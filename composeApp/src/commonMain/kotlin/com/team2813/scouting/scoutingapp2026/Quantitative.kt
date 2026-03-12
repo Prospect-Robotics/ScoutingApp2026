@@ -170,18 +170,17 @@ fun Prematch(
             var matchNumber by
                 preMatchData.matchNumber // the match that the Human is scouting
             TextField(
+                value = nameOfHuman,
+                onValueChange = { nameOfHuman = it },
+                singleLine = true,
+                label = { Text(stringResource(Res.string.nameOfPerson)) })
+            TextField(
                 value = matchNumber,
                 onValueChange = { matchNumber = it },
                 singleLine = true,
                 label = { Text(stringResource(Res.string.matchNumber)) },
                 keyboardOptions =
                     KeyboardOptions(keyboardType = KeyboardType.Number))
-            TextField(
-                value = nameOfHuman,
-                onValueChange = { nameOfHuman = it },
-                singleLine = true,
-                label = { Text(stringResource(Res.string.nameOfPerson)) })
-
             TextField(
                 value = scoutingTeamNumber,
                 onValueChange = { scoutingTeamNumber = it },
@@ -366,13 +365,13 @@ fun Endgame(
                     }
                 }
             }
+            Text("Climb Timer")
+            ClimbTimer(endgameData.climbTime)
             IncrementButton(
                 stringResource(Res.string.cycles),
                 endgameData.numCycles,
                 enabled = true)
             ApproxFuel(endgameData.fuel, modifier = Modifier.fillMaxWidth())
-            Text("Climb Timer")
-            ClimbTimer(endgameData.climbTime)
             TextField(
                 value = notes,
                 onValueChange = { notes = it },
