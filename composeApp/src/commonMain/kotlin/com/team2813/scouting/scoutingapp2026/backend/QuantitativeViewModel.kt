@@ -62,15 +62,16 @@ class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
     val preMatchData = PreMatchData()
     val endgameData = EndgameData()
     val currentScreen = mutableIntStateOf(0)
+    // startTime is the current timestamp, but in UTC
     @OptIn(ExperimentalTime::class)
-    val startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
+    val startTime = Clock.System.now().toLocalDateTime(TimeZone.UTC).toString()
     @OptIn(ExperimentalUuidApi::class)
     val uuid = Uuid.random().toHexDashString()
 
     suspend fun submit(navController: NavController) {
         val allData =
             SubmitRepository.SubmitData(
-                preMatchData, autoData, teleopData, endgameData, "${uuid}:${startTime}")
+                preMatchData, autoData, teleopData, endgameData, "${uuid}:${startTime}Z")
         try {
             withTimeout(5.seconds) { submitRepository.submitPost(allData) }
             navController.popBackStack(Home, false)
