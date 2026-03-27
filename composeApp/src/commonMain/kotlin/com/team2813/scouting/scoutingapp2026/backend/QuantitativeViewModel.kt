@@ -11,7 +11,15 @@ import io.ktor.util.logging.Logger
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.withTimeout
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.koinInject
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class AutoData {
     val shootPreload = mutableStateOf(false)
@@ -54,11 +62,15 @@ class QuantitativeViewModel(private val submitRepository: SubmitRepository) :
     val preMatchData = PreMatchData()
     val endgameData = EndgameData()
     val currentScreen = mutableIntStateOf(0)
+    @OptIn(ExperimentalTime::class)
+    val startTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
+    @OptIn(ExperimentalUuidApi::class)
+    val uuid = Uuid.random().toHexDashString()
 
     suspend fun submit(navController: NavController) {
         val allData =
             SubmitRepository.SubmitData(
-                preMatchData, autoData, teleopData, endgameData)
+                preMatchData, autoData, teleopData, endgameData, "${uuid}:${startTime}")
         try {
             withTimeout(5.seconds) { submitRepository.submitPost(allData) }
             navController.popBackStack(Home, false)

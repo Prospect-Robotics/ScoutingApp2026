@@ -61,6 +61,7 @@ class SubmitRepositoryActual : SubmitRepository {
                     addMutable("entry.1931120353", EndgameData::notes)
                     addMutable("entry.747053636", EndgameData::fuel)
                 }
+            add("entry.2006523818", SubmitData::uuid)
             }
 
     override suspend fun submitPost(data: SubmitData) {
@@ -88,6 +89,7 @@ interface SubmitRepository {
         val autonomousData: AutoData,
         val teleopData: TeleopData,
         val endgameData: EndgameData,
+        val uuid: String,
     )
 
     suspend fun submitPost(data: SubmitData)

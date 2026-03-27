@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.qrose)
 //            implementation(libs.qrcode)
+            implementation(libs.kotlinx.datetime)
             implementation(libs.ktor.core)
             implementation(libs.ktor.json)
             implementation(libs.ktor.contentNegotiation)
