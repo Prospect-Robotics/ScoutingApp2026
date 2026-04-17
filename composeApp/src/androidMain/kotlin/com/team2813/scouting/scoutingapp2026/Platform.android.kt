@@ -2,6 +2,7 @@ package com.team2813.scouting.scoutingapp2026
 
 import android.content.ClipData
 import androidx.compose.ui.platform.ClipEntry
+import com.team2813.scouting.scoutingapp2026.backend.DiskRepository
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import org.koin.android.ext.koin.androidContext
@@ -9,6 +10,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import org.koin.core.module.Module
 import org.koin.dsl.KoinConfiguration
+import org.koin.dsl.bind
 import org.koin.dsl.koinConfiguration
 import org.koin.dsl.module
 
@@ -27,7 +29,8 @@ actual fun clipEntryOf(string: String): ClipEntry =
 val platformModule: Module = module {
     // required android context added in MainActivity, as we don't statically
     // know the context (and shouldn't)
-    single<DiskRepositoryImpl> { DiskRepositoryImpl(context = get()) }
+    single<DiskRepositoryImpl> { DiskRepositoryImpl(context = get()) } bind
+        DiskRepository::class
 }
 actual val platformConfig: KoinConfiguration? = koinConfiguration {
     modules(platformModule)
