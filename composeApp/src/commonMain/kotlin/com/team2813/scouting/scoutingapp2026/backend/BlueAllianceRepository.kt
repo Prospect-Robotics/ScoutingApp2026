@@ -1,5 +1,8 @@
 package com.team2813.scouting.scoutingapp2026.backend
 
+import kotlin.collections.setOf
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -7,9 +10,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlin.collections.setOf
-import kotlin.concurrent.atomics.AtomicBoolean
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 private const val filename = "matches.json"
 private const val stateFilename = "state.json"
@@ -25,15 +25,24 @@ private data class CurrentState(
         return "$eventCode-$color-$driverStationNum"
     }
 }
+
 private fun AllData.asCurrentState(): CurrentState? {
-    return eventCode?.let {
-        CurrentState(it, allianceColor, driverStationNum)
-    }
+    return eventCode?.let { CurrentState(it, allianceColor, driverStationNum) }
 }
-class BlueAllianceRepositoryActual(private val diskRepo: DiskRepository, private val tbaKey: String): BlueAllianceRepository {
-    private val _allData: MutableStateFlow<AllData> = MutableStateFlow(AllData())
+
+class BlueAllianceRepositoryActual(
+    private val diskRepo: DiskRepository,
+    private val tbaKey: String
+) : BlueAllianceRepository {
+    private val _allData: MutableStateFlow<AllData> =
+        MutableStateFlow(AllData())
     override val allData: StateFlow<AllData> = _allData.asStateFlow()
-    override suspend fun setCompetition(compId: String, color: AllianceColor, driverStationNum: Int) {
+
+    override suspend fun setCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    ) {
         readFromCache(CurrentState(compId, color, driverStationNum))?.let {
             _allData.value = it
             return
@@ -43,25 +52,31 @@ class BlueAllianceRepositoryActual(private val diskRepo: DiskRepository, private
         }
     }
 
-    override suspend fun fetchCompetition(compId: String, color: AllianceColor, driverStationNum: Int) {
-        if (readFromCache(CurrentState(compId, color, driverStationNum)) != null) {
+    override suspend fun fetchCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    ) {
+        if (readFromCache(CurrentState(compId, color, driverStationNum)) !=
+            null) {
             return // already know about it; nothing to fetch
         }
         readCompetition(compId, color, driverStationNum)
     }
 
-    private suspend fun readCompetition(compId: String, color: AllianceColor, driverStationNum: Int): AllData? {
+    private suspend fun readCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    ): AllData? {
         TODO("Read from TBA")
     }
 
     override suspend fun clearCompetition() {
-        val data = _allData.updateAndGet {
-            it.copy(
-                eventName = null,
-                eventCode = null,
-                matchMap = mapOf()
-            )
-        }
+        val data =
+            _allData.updateAndGet {
+                it.copy(eventName = null, eventCode = null, matchMap = mapOf())
+            }
         writeToDisk(data)
     }
 
@@ -77,11 +92,12 @@ class BlueAllianceRepositoryActual(private val diskRepo: DiskRepository, private
     }
 
     private suspend fun writeToDisk(data: AllData) {
-        val filename = data.asCurrentState()?.let {
-            diskRepo.writeFile(stateFilename, Json.encodeToString(it))
-            addFileToCache("$it.json")
-            it.toString()
-        } ?: filename
+        val filename =
+            data.asCurrentState()?.let {
+                diskRepo.writeFile(stateFilename, Json.encodeToString(it))
+                addFileToCache("$it.json")
+                it.toString()
+            } ?: filename
         val data = Json.encodeToString(data)
         diskRepo.writeFile(filename, data)
     }
@@ -118,19 +134,22 @@ class BlueAllianceRepositoryActual(private val diskRepo: DiskRepository, private
             }
         }
     }
+
     private suspend fun readFromDisk(): AllData? {
         diskRepo.readFile(stateFilename)?.let { stateStr ->
             val state: CurrentState? = Json.decodeFromString(stateStr)
             if (state != null) {
-                diskRepo.readFile("$state.json")
-            } else {
-                diskRepo.readFile(filename)
-            }?.let {
-                Json.decodeFromString<AllData>(it)
-            }
+                    diskRepo.readFile("$state.json")
+                } else {
+                    diskRepo.readFile(filename)
+                }
+                ?.let { Json.decodeFromString<AllData>(it) }
         }
-        return diskRepo.readFile(filename)?.let { Json.decodeFromString<AllData>(it)}
+        return diskRepo.readFile(filename)?.let {
+            Json.decodeFromString<AllData>(it)
+        }
     }
+
     @OptIn(ExperimentalAtomicApi::class)
     private val loaded = AtomicBoolean(false)
 
@@ -142,28 +161,34 @@ class BlueAllianceRepositoryActual(private val diskRepo: DiskRepository, private
     }
 }
 
-class BlueAllianceRepositorySkeleton: BlueAllianceRepository {
-    private val _allData: MutableStateFlow<AllData> = MutableStateFlow(AllData())
+class BlueAllianceRepositorySkeleton : BlueAllianceRepository {
+    private val _allData: MutableStateFlow<AllData> =
+        MutableStateFlow(AllData())
     override val allData: StateFlow<AllData> = _allData.asStateFlow()
-    override suspend fun setCompetition(compId: String, color: AllianceColor, driverStationNum: Int) {
+
+    override suspend fun setCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    ) {
         _allData.update {
             it.copy(
                 eventName = compId,
                 eventCode = compId,
                 allianceColor = color,
-                driverStationNum = driverStationNum
-            )
+                driverStationNum = driverStationNum)
         }
     }
 
-    override suspend fun fetchCompetition(compId: String, color: AllianceColor, driverStationNum: Int) {}
+    override suspend fun fetchCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    ) {}
+
     override suspend fun clearCompetition() {
         _allData.update {
-            it.copy(
-                eventCode = null,
-                eventName = null,
-                matchMap = mapOf()
-            )
+            it.copy(eventCode = null, eventName = null, matchMap = mapOf())
         }
     }
 
@@ -174,9 +199,22 @@ class BlueAllianceRepositorySkeleton: BlueAllianceRepository {
 
 interface BlueAllianceRepository {
     val allData: StateFlow<AllData>
-    suspend fun setCompetition(compId: String, color: AllianceColor, driverStationNum: Int)
-    suspend fun fetchCompetition(compId: String, color: AllianceColor, driverStationNum: Int)
+
+    suspend fun setCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    )
+
+    suspend fun fetchCompetition(
+        compId: String,
+        color: AllianceColor,
+        driverStationNum: Int
+    )
+
     suspend fun clearLocalCache()
+
     suspend fun clearCompetition()
+
     suspend fun load()
 }

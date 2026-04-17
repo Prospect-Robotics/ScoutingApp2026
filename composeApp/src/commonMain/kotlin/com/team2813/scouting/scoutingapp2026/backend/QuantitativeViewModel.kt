@@ -8,18 +8,18 @@ import androidx.navigation.navOptions
 import com.team2813.scouting.scoutingapp2026.Home
 import com.team2813.scouting.scoutingapp2026.QRCode
 import io.ktor.util.logging.Logger
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.withTimeout
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.koin.compose.koinInject
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class AutoData {
     val shootPreload = mutableStateOf(false)
@@ -73,7 +73,12 @@ class QuantitativeViewModel(
     suspend fun submit(navController: NavController) {
         val allData =
             SubmitRepository.SubmitData(
-                preMatchData, autoData, teleopData, endgameData, tbaRepository.allData.value.eventCode ?: "", "${uuid}:${startTime}Z")
+                preMatchData,
+                autoData,
+                teleopData,
+                endgameData,
+                tbaRepository.allData.value.eventCode ?: "",
+                "${uuid}:${startTime}Z")
         try {
             withTimeout(5.seconds) { submitRepository.submitPost(allData) }
             navController.popBackStack(Home, false)

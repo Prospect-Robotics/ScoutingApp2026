@@ -8,7 +8,8 @@ import scoutingapp2026.composeapp.generated.resources.alliance_color
 enum class AllianceColor {
     Red,
     Blue;
-    //TODO: Implement the alliance color string array resource
+
+    // TODO: Implement the alliance color string array resource
     val value: String
         @Composable
         get() = stringArrayResource(Res.array.alliance_color)[ordinal]

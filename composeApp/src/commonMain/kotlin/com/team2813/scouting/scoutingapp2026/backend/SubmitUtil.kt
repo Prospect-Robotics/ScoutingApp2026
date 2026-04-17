@@ -1,8 +1,7 @@
-package com.team2813.scouting2025.backend
+package com.team2813.scouting.scoutingapp2026.backend
 
 import androidx.compose.runtime.MutableState
 import com.team2813.scouting.scoutingapp2026.httpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType

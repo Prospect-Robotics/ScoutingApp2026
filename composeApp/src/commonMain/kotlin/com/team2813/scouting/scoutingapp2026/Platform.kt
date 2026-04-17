@@ -18,6 +18,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.io.files.FileSystem
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
+import org.jetbrains.compose.resources.MissingResourceException
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.parameter.parametersOf
@@ -33,26 +34,28 @@ val commonModule: Module = module {
     single { SubmitRepositoryActual() } bind SubmitRepository::class
     single { DiskRepositorySkeletal() } bind DiskRepository::class
     single<BlueAllianceRepository> {
-        val uri = Res.getUri("tba-key.txt")
-        if (SystemFileSystem.exists(Path(uri))) {
+        try {
             val apiKey = runBlocking {
                 Res.readBytes("tba-key.txt").decodeToString()
             }
             BlueAllianceRepositoryActual(diskRepo = get(), apiKey)
-        } else {
+        } catch (_: MissingResourceException) {
+            // Even Res.getUri fails if the resource doesn't exist with
+            // MissingResourceException. Thus, the best we can do to handle the
+            // resource not existing is to try and read it, and catch the
+            // exception.
             BlueAllianceRepositorySkeleton()
         }
     }
     viewModel<QuantitativeViewModel> {
         QuantitativeViewModel(submitRepository = get(), tbaRepository = get())
     }
-    viewModel<EventViewModel> {
-        EventViewModel(tbaRepo = get())
-    }
+    viewModel<EventViewModel> { EventViewModel(tbaRepo = get()) }
 }
 val previewModule: Module = module {
     single { SubmitRepositorySkeleton() } bind SubmitRepository::class
-    single { BlueAllianceRepositorySkeleton() } bind BlueAllianceRepository::class
+    single { BlueAllianceRepositorySkeleton() } bind
+        BlueAllianceRepository::class
     viewModel<QuantitativeViewModel> {
         QuantitativeViewModel(submitRepository = get(), tbaRepository = get())
     }
