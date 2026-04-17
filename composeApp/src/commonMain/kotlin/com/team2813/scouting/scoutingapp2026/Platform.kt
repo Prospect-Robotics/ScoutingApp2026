@@ -49,7 +49,7 @@ val commonModule: Module = module {
 }
 
 // extra koin config for logging/modules implementing backend stuff
-expect val extraConfiguration: KoinConfiguration?
+expect val platformConfig: KoinConfiguration?
 val previewModule: Module = module {
     single { SubmitRepositorySkeleton() } bind SubmitRepository::class
     single { BlueAllianceRepositorySkeleton() } bind

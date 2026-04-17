@@ -4,6 +4,7 @@ import android.content.ClipData
 import androidx.compose.ui.platform.ClipEntry
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
+import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import org.koin.core.module.Module
@@ -24,9 +25,11 @@ actual fun clipEntryOf(string: String): ClipEntry =
     ClipEntry(ClipData.newPlainText("plain text", string))
 
 val platformModule: Module = module {
-    // TODO: implement!
+    // required android context added in MainActivity, as we don't statically
+    // know the context (and shouldn't)
+    single<DiskRepositoryImpl> { DiskRepositoryImpl(context = get()) }
 }
-actual val extraConfiguration: KoinConfiguration? = koinConfiguration {
+actual val platformConfig: KoinConfiguration? = koinConfiguration {
     modules(platformModule)
     androidLogger(Level.DEBUG)
 }

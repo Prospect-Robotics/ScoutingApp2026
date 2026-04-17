@@ -25,7 +25,7 @@ actual fun clipEntryOf(string: String): ClipEntry =
 val platformModule: Module = module {
     // TODO: implement!
 }
-actual val extraConfiguration: KoinConfiguration? = koinConfiguration {
+actual val platformConfig: KoinConfiguration? = koinConfiguration {
     modules(platformModule)
     printLogger(Level.DEBUG)
 }

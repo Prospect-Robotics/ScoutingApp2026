@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,26 +26,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import kotlinx.coroutines.launch
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.includes
+import org.koin.dsl.koinConfiguration
 import scoutingapp2026.composeapp.generated.resources.Res
 import scoutingapp2026.composeapp.generated.resources.blue2813
 import scoutingapp2026.composeapp.generated.resources.done
 import scoutingapp2026.composeapp.generated.resources.frc_rebuilt_color_icon
 import scoutingapp2026.composeapp.generated.resources.gear_heads_logo
-import scoutingapp2026.composeapp.generated.resources.gearheads_2026_logo_light
 import scoutingapp2026.composeapp.generated.resources.quantitative
 import scoutingapp2026.composeapp.generated.resources.rebuilt_logo
 import scoutingapp2026.composeapp.generated.resources.yellow2813
@@ -128,7 +123,7 @@ fun HomeScreen(navController: NavHostController) {
 
 @Composable
 @Preview
-fun App() {
+fun App(configuration: KoinAppDeclaration? = null) {
     GearHeadsTheme {
         Surface {
             Column(
@@ -140,7 +135,9 @@ fun App() {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 KoinApplication({
-                    includes(extraConfiguration)
+                    includes(
+                        platformConfig,
+                        configuration?.let { koinConfiguration(it) })
                     modules(commonModule)
                 }) {
                     val navController: NavHostController =
