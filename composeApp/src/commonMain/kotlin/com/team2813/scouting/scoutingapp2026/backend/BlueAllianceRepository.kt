@@ -1,5 +1,13 @@
 package com.team2813.scouting.scoutingapp2026.backend
 
+import com.team2813.scouting.scoutingapp2026.httpClient
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.serialization.kotlinx.json.json
 import kotlin.collections.setOf
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -10,6 +18,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.koin.core.Koin
+import org.koin.core.logger.Logger
 
 private const val filename = "matches.json"
 private const val stateFilename = "state.json"
@@ -37,6 +47,13 @@ class BlueAllianceRepositoryActual(
     private val _allData: MutableStateFlow<AllData> =
         MutableStateFlow(AllData())
     override val allData: StateFlow<AllData> = _allData.asStateFlow()
+    private val httpClient: HttpClient = httpClient {
+        install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+        defaultRequest {
+            url("https://www.thebluealliance.com/api/v3")
+            header("X-TBA-Auth-Key", tbaKey)
+        }
+    }
 
     override suspend fun setCompetition(
         compId: String,
@@ -69,7 +86,43 @@ class BlueAllianceRepositoryActual(
         color: AllianceColor,
         driverStationNum: Int
     ): AllData? {
-        TODO("Read from TBA")
+        try {
+            val events =
+                httpClient.get("events/2026/simple").body<List<Event>>()
+            val requestedEvent =
+                events.firstOrNull { it.eventCode == compId } ?: return null
+
+            val matches =
+                httpClient
+                    .get("event/2026${compId}/matches/simple")
+                    .body<List<Match>>()
+            val matchMap =
+                matches
+                    .filter { it.compLevel == CompLevel.Qualifications }
+                    .associate {
+                        it.matchNumber.toString() to
+                            it.alliances.let { alliances ->
+                                when (color) {
+                                    AllianceColor.Blue ->
+                                        alliances.blue.teams[driverStationNum]
+                                            .substring(3)
+                                    AllianceColor.Red ->
+                                        alliances.red.teams[driverStationNum]
+                                            .substring(3)
+                                }
+                            }
+                    }
+            return AllData(
+                requestedEvent.name,
+                requestedEvent.eventCode,
+                color,
+                driverStationNum + 1,
+                matchMap)
+        } catch (e: Exception) {
+            println(
+                "An error occurred while loading the competition $compId on $color $driverStationNum: ${e.stackTraceToString()}")
+            return null
+        }
     }
 
     override suspend fun clearCompetition() {

@@ -12,16 +12,11 @@ import com.team2813.scouting.scoutingapp2026.backend.SubmitRepository
 import com.team2813.scouting.scoutingapp2026.backend.SubmitRepositoryActual
 import com.team2813.scouting.scoutingapp2026.backend.SubmitRepositorySkeleton
 import io.ktor.client.*
-import io.ktor.utils.io.charsets.Charset
-import io.ktor.utils.io.charsets.Charsets
 import kotlinx.coroutines.runBlocking
-import kotlinx.io.files.FileSystem
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
 import org.jetbrains.compose.resources.MissingResourceException
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import scoutingapp2026.composeapp.generated.resources.Res
@@ -52,6 +47,9 @@ val commonModule: Module = module {
     }
     viewModel<EventViewModel> { EventViewModel(tbaRepo = get()) }
 }
+
+// extra koin config for logging/modules implementing backend stuff
+expect val extraConfiguration: KoinConfiguration?
 val previewModule: Module = module {
     single { SubmitRepositorySkeleton() } bind SubmitRepository::class
     single { BlueAllianceRepositorySkeleton() } bind

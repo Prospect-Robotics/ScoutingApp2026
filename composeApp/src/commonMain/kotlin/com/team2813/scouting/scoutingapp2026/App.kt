@@ -39,6 +39,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.dsl.KoinConfiguration
+import org.koin.dsl.includes
 import scoutingapp2026.composeapp.generated.resources.Res
 import scoutingapp2026.composeapp.generated.resources.blue2813
 import scoutingapp2026.composeapp.generated.resources.done
@@ -137,7 +139,10 @@ fun App() {
                         .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                KoinApplication({ modules(commonModule) }) {
+                KoinApplication({
+                    includes(extraConfiguration)
+                    modules(commonModule)
+                }) {
                     val navController: NavHostController =
                         rememberNavController()
                     NavHost(navController, startDestination = Home) {
