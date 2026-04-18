@@ -1,5 +1,6 @@
 package com.team2813.scouting.scoutingapp2026.backend
 
+import androidx.compose.ui.text.toLowerCase
 import com.team2813.scouting.scoutingapp2026.httpClient
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -7,6 +8,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlin.collections.setOf
 import kotlin.concurrent.atomics.AtomicBoolean
@@ -50,7 +53,7 @@ class BlueAllianceRepositoryActual(
     private val httpClient: HttpClient = httpClient {
         install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
         defaultRequest {
-            url("https://www.thebluealliance.com/api/v3")
+            url("https://www.thebluealliance.com/api/v3/")
             header("X-TBA-Auth-Key", tbaKey)
         }
     }
@@ -64,8 +67,10 @@ class BlueAllianceRepositoryActual(
             _allData.value = it
             return
         }
+        println("READING FROM TBA....")
         readCompetition(compId, color, driverStationNum)?.let {
             _allData.value = it
+            writeToDisk(it)
         }
     }
 
@@ -78,7 +83,16 @@ class BlueAllianceRepositoryActual(
             null) {
             return // already know about it; nothing to fetch
         }
-        readCompetition(compId, color, driverStationNum)
+        readCompetition(compId, color, driverStationNum)?.let {
+            writeToDisk(it)
+        }
+    }
+
+    private suspend inline fun <reified T> HttpResponse.okBody(): T {
+        if (status.isSuccess()) {
+            return body<T>()
+        }
+        throw RuntimeException("Non-success response! $status")
     }
 
     private suspend fun readCompetition(
@@ -87,15 +101,15 @@ class BlueAllianceRepositoryActual(
         driverStationNum: Int
     ): AllData? {
         try {
-            val events =
-                httpClient.get("events/2026/simple").body<List<Event>>()
+            // All TBA keys are all lowercase
+            val compId = compId.lowercase()
             val requestedEvent =
-                events.firstOrNull { it.eventCode == compId } ?: return null
+                httpClient.get("event/2026${compId}/simple").okBody<Event>()
 
             val matches =
                 httpClient
                     .get("event/2026${compId}/matches/simple")
-                    .body<List<Match>>()
+                    .okBody<List<Match>>()
             val matchMap =
                 matches
                     .filter { it.compLevel == CompLevel.Qualifications }
@@ -104,10 +118,10 @@ class BlueAllianceRepositoryActual(
                             it.alliances.let { alliances ->
                                 when (color) {
                                     AllianceColor.Blue ->
-                                        alliances.blue.teams[driverStationNum]
+                                        alliances.blue.teams[driverStationNum - 1]
                                             .substring(3)
                                     AllianceColor.Red ->
-                                        alliances.red.teams[driverStationNum]
+                                        alliances.red.teams[driverStationNum - 1]
                                             .substring(3)
                                 }
                             }
@@ -116,7 +130,7 @@ class BlueAllianceRepositoryActual(
                 requestedEvent.name,
                 requestedEvent.eventCode,
                 color,
-                driverStationNum + 1,
+                driverStationNum,
                 matchMap)
         } catch (e: Exception) {
             println(
@@ -149,18 +163,18 @@ class BlueAllianceRepositoryActual(
             data.asCurrentState()?.let {
                 diskRepo.writeFile(stateFilename, Json.encodeToString(it))
                 addFileToCache("$it.json")
-                it.toString()
+                "$it.json"
             } ?: filename
         val data = Json.encodeToString(data)
         diskRepo.writeFile(filename, data)
     }
 
     private suspend fun addFileToCache(filename: String) {
-        diskRepo.readFile(cachedFilename)?.let {
-            val data: MutableSet<String> = Json.decodeFromString(it)
-            if (data.add(filename)) {
-                diskRepo.writeFile(cachedFilename, Json.encodeToString(data))
-            }
+        val data: MutableSet<String> = diskRepo.readFile(cachedFilename)?.let {
+            Json.decodeFromString(it)
+        } ?: mutableSetOf()
+        if (data.add(filename)) {
+            diskRepo.writeFile(cachedFilename, Json.encodeToString(data))
         }
     }
 

@@ -9,7 +9,6 @@ enum class AllianceColor {
     Red,
     Blue;
 
-    // TODO: Implement the alliance color string array resource
     val value: String
         @Composable
         get() = stringArrayResource(Res.array.alliance_color)[ordinal]

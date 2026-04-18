@@ -27,11 +27,11 @@ expect fun clipEntryOf(string: String): ClipEntry
 
 val commonModule: Module = module {
     single { SubmitRepositoryActual() } bind SubmitRepository::class
-    single { DiskRepositorySkeletal() } bind DiskRepository::class
+//    single { DiskRepositorySkeletal() } bind DiskRepository::class
     single<BlueAllianceRepository> {
         try {
             val apiKey = runBlocking {
-                Res.readBytes("tba-key.txt").decodeToString()
+                Res.readBytes("files/tba-key.txt").decodeToString().trim()
             }
             BlueAllianceRepositoryActual(diskRepo = get(), apiKey)
         } catch (_: MissingResourceException) {
@@ -52,6 +52,7 @@ val commonModule: Module = module {
 expect val platformConfig: KoinConfiguration?
 val previewModule: Module = module {
     single { SubmitRepositorySkeleton() } bind SubmitRepository::class
+    single { DiskRepositorySkeletal() } bind DiskRepository::class
     single { BlueAllianceRepositorySkeleton() } bind
         BlueAllianceRepository::class
     viewModel<QuantitativeViewModel> {

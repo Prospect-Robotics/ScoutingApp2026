@@ -7,6 +7,9 @@ import java.io.FileOutputStream
 import java.nio.file.Files
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.apache.commons.lang3.SystemUtils
+
+private const val folderName = "com.team2813.scouting2026"
 
 class DiskRepositoryImpl : DiskRepository {
     private fun getFile(path: String): File {

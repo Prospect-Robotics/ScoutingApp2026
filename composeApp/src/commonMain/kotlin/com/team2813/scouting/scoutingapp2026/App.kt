@@ -52,6 +52,8 @@ import scoutingapp2026.composeapp.generated.resources.yellow2813
 
 @Serializable data class QRCode(val url: String)
 
+@Serializable object CompetitionSelect
+
 @Composable
 fun QRCodeScreen(url: String, navController: NavHostController) {
     Column(
@@ -104,6 +106,9 @@ fun HomeScreen(navController: NavHostController) {
                 Button(onClick = { navController.navigate(Quantitative) }) {
                     Text(stringResource(Res.string.quantitative))
                 }
+            Button(onClick = { navController.navigate(CompetitionSelect)}) {
+                    Text("Competition Select")
+                }
             }
         val bottomImage =
             if (isSystemInDarkTheme()) {
@@ -149,6 +154,7 @@ fun App(configuration: KoinAppDeclaration? = null) {
                             val qrcode = navBackStack.toRoute<QRCode>()
                             QRCodeScreen(qrcode.url, navController)
                         }
+                        composable<CompetitionSelect> { CompSelection() }
                     }
                 }
             }
