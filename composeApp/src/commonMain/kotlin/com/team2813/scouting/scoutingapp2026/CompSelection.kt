@@ -1,9 +1,11 @@
 package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.team2813.scouting.scoutingapp2026.backend.AllData
 import com.team2813.scouting.scoutingapp2026.backend.AllianceColor
 import com.team2813.scouting.scoutingapp2026.backend.EventViewModel
@@ -37,22 +40,31 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.Res
 import scoutingapp2026.composeapp.generated.resources.alliance
+import scoutingapp2026.composeapp.generated.resources.back
 import scoutingapp2026.composeapp.generated.resources.driverStation
 import scoutingapp2026.composeapp.generated.resources.dsNum
 import scoutingapp2026.composeapp.generated.resources.eventCode
 import scoutingapp2026.composeapp.generated.resources.eventName
 
 @Composable
-fun CompSelection(eventViewModel: EventViewModel = koinViewModel()) {
+fun CompSelection(
+    navController: NavHostController,
+    eventViewModel: EventViewModel = koinViewModel()
+) {
     val allData by eventViewModel.allData.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(eventViewModel) { eventViewModel.load() }
     Column {
-        CompSelector { eventCode, allianceColor, dsNum ->
-            coroutineScope.launch {
-                eventViewModel.setEvent(eventCode, allianceColor, dsNum)
+        CompSelector(
+            { navController.popBackStack() },
+            Modifier.padding(10.dp).fillMaxSize()) {
+                eventCode,
+                allianceColor,
+                dsNum ->
+                coroutineScope.launch {
+                    eventViewModel.setEvent(eventCode, allianceColor, dsNum)
+                }
             }
-        }
         if (allData.eventCode != null) {
             HorizontalDivider()
             CompSelectInternal(allData)
@@ -65,7 +77,7 @@ fun CompSelection(eventViewModel: EventViewModel = koinViewModel()) {
 private fun CompSelectorPreview() {
     var data: AllData by remember { mutableStateOf(AllData()) }
     Column {
-        CompSelector { code, alliance, dsNum ->
+        CompSelector({}) { code, alliance, dsNum ->
             data =
                 AllData(
                     eventName = "Unknown",
@@ -82,64 +94,73 @@ private fun CompSelectorPreview() {
 }
 
 @Composable
-private fun CompSelector(setComp: (String, AllianceColor, Int) -> Unit) {
+private fun CompSelector(
+    goBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    setComp: (String, AllianceColor, Int) -> Unit,
+) {
     var eventCode by remember { mutableStateOf("") }
     var allianceColor by remember { mutableStateOf(AllianceColor.Blue) }
     var dsNum by remember { mutableIntStateOf(1) }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement =
-            Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
-        modifier = Modifier.fillMaxWidth()) {
-            TextField(
-                eventCode,
-                { eventCode = it },
-                label = { Text(stringResource(Res.string.eventCode)) },
-                placeholder = { Text("CASNV") },
-                singleLine = true)
-            Text(stringResource(Res.string.alliance))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.selectableGroup()) {
-                    for (value in AllianceColor.entries) {
-                        val selected = allianceColor == value
-                        val select = { allianceColor = value }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier =
-                                Modifier.selectable(
-                                    selected, onClick = select)) {
-                                RadioButton(selected, onClick = select)
-                                Text(value.value)
-                            }
-
-                        Spacer(modifier = Modifier.width(5.dp))
-                    }
-                }
-            Text(stringResource(Res.string.dsNum))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.selectableGroup()) {
-                    for (value in 1..3) {
-                        val selected = dsNum == value
-                        val select = { dsNum = value }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier =
-                                Modifier.selectable(
-                                    selected, onClick = select)) {
-                                RadioButton(
-                                    selected = selected, onClick = select)
-                                Text("$value")
-                            }
-                        Spacer(modifier = Modifier.width(5.dp))
-                    }
-                }
-            Button(onClick = { setComp(eventCode, allianceColor, dsNum) }) {
-                Text("Fetch")
+    Box(modifier = modifier) {
+        Button(
+            onClick = goBack, modifier = Modifier.align(Alignment.TopStart)) {
+                Text(stringResource(Res.string.back))
             }
-        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement =
+                Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+            modifier = Modifier.fillMaxWidth()) {
+                TextField(
+                    eventCode,
+                    { eventCode = it },
+                    label = { Text(stringResource(Res.string.eventCode)) },
+                    placeholder = { Text("CASNV") },
+                    singleLine = true)
+                Text(stringResource(Res.string.alliance))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.selectableGroup()) {
+                        for (value in AllianceColor.entries) {
+                            val selected = allianceColor == value
+                            val select = { allianceColor = value }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier =
+                                    Modifier.selectable(
+                                        selected, onClick = select)) {
+                                    RadioButton(selected, onClick = select)
+                                    Text(value.value)
+                                }
+
+                            Spacer(modifier = Modifier.width(5.dp))
+                        }
+                    }
+                Text(stringResource(Res.string.dsNum))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.selectableGroup()) {
+                        for (value in 1..3) {
+                            val selected = dsNum == value
+                            val select = { dsNum = value }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier =
+                                    Modifier.selectable(
+                                        selected, onClick = select)) {
+                                    RadioButton(
+                                        selected = selected, onClick = select)
+                                    Text("$value")
+                                }
+                            Spacer(modifier = Modifier.width(5.dp))
+                        }
+                    }
+                Button(onClick = { setComp(eventCode, allianceColor, dsNum) }) {
+                    Text("Fetch")
+                }
+            }
+    }
 }
 
 @Composable

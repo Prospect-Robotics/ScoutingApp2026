@@ -155,7 +155,9 @@ fun App(configuration: KoinAppDeclaration? = null) {
                             val qrcode = navBackStack.toRoute<QRCode>()
                             QRCodeScreen(qrcode.url, navController)
                         }
-                        composable<CompetitionSelect> { CompSelection() }
+                        composable<CompetitionSelect> {
+                            CompSelection(navController)
+                        }
                     }
                 }
             }
