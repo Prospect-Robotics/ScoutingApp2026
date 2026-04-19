@@ -67,7 +67,6 @@ class BlueAllianceRepositoryActual(
             _allData.value = it
             return
         }
-        println("READING FROM TBA....")
         readCompetition(compId, color, driverStationNum)?.let {
             _allData.value = it
             writeToDisk(it)
