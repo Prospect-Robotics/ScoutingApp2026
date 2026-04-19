@@ -61,6 +61,7 @@ class SubmitRepositoryActual : SubmitRepository {
                     addMutable("entry.747053636", EndgameData::fuel)
                 }
                 add("entry.2006523818", SubmitData::uuid)
+                add("entry.1249158849", SubmitData::eventCode)
             }
 
     override suspend fun submitPost(data: SubmitData) {

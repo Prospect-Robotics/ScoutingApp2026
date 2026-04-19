@@ -71,6 +71,7 @@ class QuantitativeViewModel(
     val uuid = Uuid.random().toHexDashString()
 
     suspend fun submit(navController: NavController) {
+        tbaRepository.load()
         val allData =
             SubmitRepository.SubmitData(
                 preMatchData,
