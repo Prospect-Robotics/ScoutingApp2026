@@ -32,10 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.team2813.scouting.scoutingapp2026.backend.EventViewModel
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
@@ -45,6 +47,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.KoinApplicationPreview
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.*
+import kotlin.let
 
 @Composable
 fun IncrementButton(
@@ -166,9 +169,13 @@ private fun PrematchPreview() {
 @Composable
 fun Prematch(
     modifier: Modifier = Modifier,
-    viewModel: QuantitativeViewModel = koinViewModel()
+    viewModel: QuantitativeViewModel = koinViewModel(),
+    eventViewModel: EventViewModel = koinViewModel(),
 ) {
     val preMatchData = viewModel.preMatchData
+    LaunchedEffect(eventViewModel) {
+        eventViewModel.load()
+    }
     Column(
         modifier,
         verticalArrangement = Arrangement.spacedBy(30.dp),
@@ -181,6 +188,7 @@ fun Prematch(
 
             var matchNumber by
                 preMatchData.matchNumber // the match that the Human is scouting
+            val matchMap by eventViewModel.allData.map { it.matchMap }.collectAsState(mapOf())
             TextField(
                 value = nameOfHuman,
                 onValueChange = { nameOfHuman = it },
@@ -188,7 +196,12 @@ fun Prematch(
                 label = { Text(stringResource(Res.string.nameOfPerson)) })
             TextField(
                 value = matchNumber,
-                onValueChange = { matchNumber = it },
+                onValueChange = {
+                    matchNumber = it
+                    matchMap[it]?.let { teamNumber ->
+                        scoutingTeamNumber = teamNumber
+                    }
+                },
                 singleLine = true,
                 label = { Text(stringResource(Res.string.matchNumber)) },
                 keyboardOptions =

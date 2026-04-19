@@ -202,17 +202,13 @@ class BlueAllianceRepositoryActual(
     }
 
     private suspend fun readFromDisk(): AllData? {
-        diskRepo.readFile(stateFilename)?.let { stateStr ->
+        return diskRepo.readFile(stateFilename)?.let { stateStr ->
             val state: CurrentState? = Json.decodeFromString(stateStr)
             if (state != null) {
-                    diskRepo.readFile("$state.json")
-                } else {
-                    diskRepo.readFile(filename)
-                }
-                ?.let { Json.decodeFromString<AllData>(it) }
-        }
-        return diskRepo.readFile(filename)?.let {
-            Json.decodeFromString<AllData>(it)
+                diskRepo.readFile("$state.json")
+            } else {
+                diskRepo.readFile(filename)
+            }?.let { Json.decodeFromString<AllData>(it) }
         }
     }
 

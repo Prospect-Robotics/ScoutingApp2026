@@ -16,6 +16,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,6 +38,9 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CompSelection(eventViewModel: EventViewModel = koinViewModel()) {
     val allData by eventViewModel.allData.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(eventViewModel) {
+        eventViewModel.load()
+    }
     Column {
         CompSelector { eventCode, allianceColor, dsNum ->
             coroutineScope.launch {

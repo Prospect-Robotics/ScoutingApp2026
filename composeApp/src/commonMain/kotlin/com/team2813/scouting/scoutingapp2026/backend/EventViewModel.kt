@@ -13,5 +13,9 @@ class EventViewModel(private val tbaRepo: BlueAllianceRepository) :
         tbaRepo.setCompetition(eventCode, allianceColor, driveStationId)
     }
 
+    suspend fun load() {
+        tbaRepo.load()
+    }
+
     val allData: StateFlow<AllData> = tbaRepo.allData
 }
