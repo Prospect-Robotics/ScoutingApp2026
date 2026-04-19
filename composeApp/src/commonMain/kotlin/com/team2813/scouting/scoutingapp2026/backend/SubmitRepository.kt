@@ -45,6 +45,7 @@ class SubmitRepositoryActual : SubmitRepository {
                         "entry.230562156",
                         TeleopData::incapacitatedTime,
                         ::msTime)
+                    addMutable("entry.1064277816", TeleopData::defenseTime, ::msTime)
                     addMutable(
                         "entry.1720238000", TeleopData::Herding, ::booleanStr)
                 }
