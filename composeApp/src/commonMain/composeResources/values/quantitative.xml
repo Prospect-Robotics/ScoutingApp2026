@@ -19,7 +19,6 @@
         <item>Endgame</item>
     </string-array>
     <string-array name="alliance_color">
-        <!--TODO: Add actual colors!-->
         <item>Red</item>
         <item>Blue</item>
     </string-array>

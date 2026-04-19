@@ -26,13 +26,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team2813.scouting.scoutingapp2026.backend.AllData
 import com.team2813.scouting.scoutingapp2026.backend.AllianceColor
 import com.team2813.scouting.scoutingapp2026.backend.EventViewModel
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import scoutingapp2026.composeapp.generated.resources.Res
+import scoutingapp2026.composeapp.generated.resources.alliance
+import scoutingapp2026.composeapp.generated.resources.driverStation
+import scoutingapp2026.composeapp.generated.resources.dsNum
+import scoutingapp2026.composeapp.generated.resources.eventCode
+import scoutingapp2026.composeapp.generated.resources.eventName
 
 @Composable
 fun CompSelection(eventViewModel: EventViewModel = koinViewModel()) {
@@ -87,10 +95,10 @@ private fun CompSelector(setComp: (String, AllianceColor, Int) -> Unit) {
             TextField(
                 eventCode,
                 { eventCode = it },
-                label = { Text("Event Code") },
+                label = { Text(stringResource(Res.string.eventCode)) },
                 placeholder = { Text("CASNV") },
                 singleLine = true)
-            Text("EventCode")
+            Text(stringResource(Res.string.alliance))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.selectableGroup()) {
@@ -109,7 +117,7 @@ private fun CompSelector(setComp: (String, AllianceColor, Int) -> Unit) {
                         Spacer(modifier = Modifier.width(5.dp))
                     }
                 }
-            Text("Driver Station Number")
+            Text(stringResource(Res.string.dsNum))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.selectableGroup()) {
@@ -141,9 +149,23 @@ private fun CompSelectInternal(allData: AllData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement =
             Arrangement.spacedBy(0.dp, Alignment.CenterVertically)) {
-            Text("Event Name: ${allData.eventName}")
-            Text("Event Code: ${allData.eventCode}")
             Text(
-                "Driver Station: ${allData.allianceColor.value} ${allData.driverStationNum}")
+                stringResource(Res.string.eventName),
+                fontWeight = FontWeight.Bold)
+            Text("${allData.eventName}")
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Text(
+                stringResource(Res.string.eventCode),
+                fontWeight = FontWeight.Bold)
+            Text("${allData.eventCode}")
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Text(
+                stringResource(Res.string.driverStation),
+                fontWeight = FontWeight.Bold)
+            Text("${allData.allianceColor.value} ${allData.driverStationNum}")
         }
 }

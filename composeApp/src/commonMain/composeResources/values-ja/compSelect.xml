@@ -1,0 +1,7 @@
+<resources>
+    <string name="eventCode">Event Code</string>
+    <string name="dsNum">Driver Station Number</string>
+    <string name="alliance">Alliance</string>
+    <string name="fetch">Fetch</string>
+    <string name="driverStation">Driver Station</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.team2813.scouting.scoutingapp2026
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ClipEntry
 import com.team2813.scouting.scoutingapp2026.backend.BlueAllianceRepository
 import com.team2813.scouting.scoutingapp2026.backend.BlueAllianceRepositoryActual
@@ -14,12 +15,14 @@ import com.team2813.scouting.scoutingapp2026.backend.SubmitRepositorySkeleton
 import io.ktor.client.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.MissingResourceException
+import org.jetbrains.compose.resources.stringResource
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import scoutingapp2026.composeapp.generated.resources.Res
+import scoutingapp2026.composeapp.generated.resources.app_name
 
 expect fun httpClient(config: HttpClientConfig<*>.() -> Unit = {}): HttpClient
 
@@ -59,3 +62,6 @@ val previewModule: Module = module {
         QuantitativeViewModel(submitRepository = get(), tbaRepository = get())
     }
 }
+
+val applicationName: String
+    @Composable get() = stringResource(Res.string.app_name)
