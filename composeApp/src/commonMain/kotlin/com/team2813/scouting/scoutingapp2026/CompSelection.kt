@@ -38,9 +38,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun CompSelection(eventViewModel: EventViewModel = koinViewModel()) {
     val allData by eventViewModel.allData.collectAsState()
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(eventViewModel) {
-        eventViewModel.load()
-    }
+    LaunchedEffect(eventViewModel) { eventViewModel.load() }
     Column {
         CompSelector { eventCode, allianceColor, dsNum ->
             coroutineScope.launch {
@@ -60,19 +58,19 @@ private fun CompSelectorPreview() {
     var data: AllData by remember { mutableStateOf(AllData()) }
     Column {
         CompSelector { code, alliance, dsNum ->
-            data = AllData(
-                eventName = "Unknown",
-                eventCode = code,
-                allianceColor = alliance,
-                driverStationNum = dsNum,
-            )
+            data =
+                AllData(
+                    eventName = "Unknown",
+                    eventCode = code,
+                    allianceColor = alliance,
+                    driverStationNum = dsNum,
+                )
         }
         if (data.eventCode != null) {
             HorizontalDivider()
             CompSelectInternal(data)
         }
     }
-
 }
 
 @Composable
@@ -83,51 +81,57 @@ private fun CompSelector(setComp: (String, AllianceColor, Int) -> Unit) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        TextField(
-            eventCode,
-            { eventCode = it },
-            label = {
-                Text("Event Code")
-            },
-            placeholder = {
-                Text("CASNV")
-            },
-            singleLine = true
-        )
-        Text("EventCode")
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.selectableGroup()) {
-            for (value in AllianceColor.entries) {
-                val selected = allianceColor == value
-                val select = {allianceColor = value}
-                Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.selectable(selected, onClick = select)) {
-                    RadioButton(selected, onClick = select)
-                    Text(value.value)
-                }
+        verticalArrangement =
+            Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        modifier = Modifier.fillMaxWidth()) {
+            TextField(
+                eventCode,
+                { eventCode = it },
+                label = { Text("Event Code") },
+                placeholder = { Text("CASNV") },
+                singleLine = true)
+            Text("EventCode")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.selectableGroup()) {
+                    for (value in AllianceColor.entries) {
+                        val selected = allianceColor == value
+                        val select = { allianceColor = value }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier =
+                                Modifier.selectable(
+                                    selected, onClick = select)) {
+                                RadioButton(selected, onClick = select)
+                                Text(value.value)
+                            }
 
-                Spacer(modifier = Modifier.width(5.dp))
-            }
-        }
-        Text("Driver Station Number")
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.selectableGroup())  {
-            for (value in 1..3) {
-                val selected = dsNum == value
-                val select = {dsNum = value}
-                Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.selectable(selected, onClick = select)) {
-                    RadioButton(selected = selected, onClick = select)
-                    Text("$value")
+                        Spacer(modifier = Modifier.width(5.dp))
+                    }
                 }
-                Spacer(modifier = Modifier.width(5.dp))
+            Text("Driver Station Number")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.selectableGroup()) {
+                    for (value in 1..3) {
+                        val selected = dsNum == value
+                        val select = { dsNum = value }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier =
+                                Modifier.selectable(
+                                    selected, onClick = select)) {
+                                RadioButton(
+                                    selected = selected, onClick = select)
+                                Text("$value")
+                            }
+                        Spacer(modifier = Modifier.width(5.dp))
+                    }
+                }
+            Button(onClick = { setComp(eventCode, allianceColor, dsNum) }) {
+                Text("Fetch")
             }
         }
-        Button(onClick = {
-            setComp(eventCode, allianceColor, dsNum)
-        }) {
-            Text("Fetch")
-        }
-    }
 }
 
 @Composable
@@ -135,10 +139,11 @@ private fun CompSelectInternal(allData: AllData) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterVertically)
-    ) {
-        Text("Event Name: ${allData.eventName}")
-        Text("Event Code: ${allData.eventCode}")
-        Text("Driver Station: ${allData.allianceColor.value} ${allData.driverStationNum}")
-    }
+        verticalArrangement =
+            Arrangement.spacedBy(0.dp, Alignment.CenterVertically)) {
+            Text("Event Name: ${allData.eventName}")
+            Text("Event Code: ${allData.eventCode}")
+            Text(
+                "Driver Station: ${allData.allianceColor.value} ${allData.driverStationNum}")
+        }
 }

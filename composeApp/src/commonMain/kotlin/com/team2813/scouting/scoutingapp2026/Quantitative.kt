@@ -34,6 +34,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.team2813.scouting.scoutingapp2026.backend.EventViewModel
 import com.team2813.scouting.scoutingapp2026.backend.QuantitativeViewModel
+import kotlin.let
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,6 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.KoinApplicationPreview
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.*
-import kotlin.let
 
 @Composable
 fun IncrementButton(
@@ -173,9 +173,7 @@ fun Prematch(
     eventViewModel: EventViewModel = koinViewModel(),
 ) {
     val preMatchData = viewModel.preMatchData
-    LaunchedEffect(eventViewModel) {
-        eventViewModel.load()
-    }
+    LaunchedEffect(eventViewModel) { eventViewModel.load() }
     Column(
         modifier,
         verticalArrangement = Arrangement.spacedBy(30.dp),
@@ -188,7 +186,10 @@ fun Prematch(
 
             var matchNumber by
                 preMatchData.matchNumber // the match that the Human is scouting
-            val matchMap by eventViewModel.allData.map { it.matchMap }.collectAsState(mapOf())
+            val matchMap by
+                eventViewModel.allData
+                    .map { it.matchMap }
+                    .collectAsState(mapOf())
             TextField(
                 value = nameOfHuman,
                 onValueChange = { nameOfHuman = it },

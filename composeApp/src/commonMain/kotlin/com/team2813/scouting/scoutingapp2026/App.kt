@@ -106,9 +106,10 @@ fun HomeScreen(navController: NavHostController) {
                 Button(onClick = { navController.navigate(Quantitative) }) {
                     Text(stringResource(Res.string.quantitative))
                 }
-            Button(onClick = { navController.navigate(CompetitionSelect)}) {
-                    Text("Competition Select")
-                }
+                Button(
+                    onClick = { navController.navigate(CompetitionSelect) }) {
+                        Text("Competition Select")
+                    }
             }
         val bottomImage =
             if (isSystemInDarkTheme()) {

@@ -117,10 +117,12 @@ class BlueAllianceRepositoryActual(
                             it.alliances.let { alliances ->
                                 when (color) {
                                     AllianceColor.Blue ->
-                                        alliances.blue.teams[driverStationNum - 1]
+                                        alliances.blue.teams[
+                                                driverStationNum - 1]
                                             .substring(3)
                                     AllianceColor.Red ->
-                                        alliances.red.teams[driverStationNum - 1]
+                                        alliances.red.teams[
+                                                driverStationNum - 1]
                                             .substring(3)
                                 }
                             }
@@ -169,9 +171,9 @@ class BlueAllianceRepositoryActual(
     }
 
     private suspend fun addFileToCache(filename: String) {
-        val data: MutableSet<String> = diskRepo.readFile(cachedFilename)?.let {
-            Json.decodeFromString(it)
-        } ?: mutableSetOf()
+        val data: MutableSet<String> =
+            diskRepo.readFile(cachedFilename)?.let { Json.decodeFromString(it) }
+                ?: mutableSetOf()
         if (data.add(filename)) {
             diskRepo.writeFile(cachedFilename, Json.encodeToString(data))
         }
@@ -205,10 +207,11 @@ class BlueAllianceRepositoryActual(
         return diskRepo.readFile(stateFilename)?.let { stateStr ->
             val state: CurrentState? = Json.decodeFromString(stateStr)
             if (state != null) {
-                diskRepo.readFile("$state.json")
-            } else {
-                diskRepo.readFile(filename)
-            }?.let { Json.decodeFromString<AllData>(it) }
+                    diskRepo.readFile("$state.json")
+                } else {
+                    diskRepo.readFile(filename)
+                }
+                ?.let { Json.decodeFromString<AllData>(it) }
         }
     }
 

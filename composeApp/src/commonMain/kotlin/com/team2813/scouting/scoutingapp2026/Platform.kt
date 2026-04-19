@@ -27,7 +27,7 @@ expect fun clipEntryOf(string: String): ClipEntry
 
 val commonModule: Module = module {
     single { SubmitRepositoryActual() } bind SubmitRepository::class
-//    single { DiskRepositorySkeletal() } bind DiskRepository::class
+    //    single { DiskRepositorySkeletal() } bind DiskRepository::class
     single<BlueAllianceRepository> {
         try {
             val apiKey = runBlocking {
