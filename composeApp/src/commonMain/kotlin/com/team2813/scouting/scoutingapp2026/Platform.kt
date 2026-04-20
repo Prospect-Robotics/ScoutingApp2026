@@ -36,7 +36,8 @@ val commonModule: Module = module {
             val apiKey = runBlocking {
                 Res.readBytes("files/tba-key.txt").decodeToString().trim()
             }
-            BlueAllianceRepositoryActual(diskRepo = get(), apiKey)
+            BlueAllianceRepositoryActual(
+                diskRepo = get(), apiKey, logger = get())
         } catch (_: MissingResourceException) {
             // Even Res.getUri fails if the resource doesn't exist with
             // MissingResourceException. Thus, the best we can do to handle the

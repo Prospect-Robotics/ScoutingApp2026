@@ -3,9 +3,9 @@ package com.team2813.scouting.scoutingapp2026
 import android.content.ClipData
 import androidx.compose.ui.platform.ClipEntry
 import com.team2813.scouting.scoutingapp2026.backend.DiskRepository
+import com.team2813.scouting.scoutingapp2026.backend.Logger
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
-import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import org.koin.core.module.Module
@@ -31,6 +31,7 @@ val platformModule: Module = module {
     // know the context (and shouldn't)
     single<DiskRepositoryImpl> { DiskRepositoryImpl(context = get()) } bind
         DiskRepository::class
+    single<LoggerImpl> { LoggerImpl() } bind Logger::class
 }
 actual val platformConfig: KoinConfiguration? = koinConfiguration {
     modules(platformModule)

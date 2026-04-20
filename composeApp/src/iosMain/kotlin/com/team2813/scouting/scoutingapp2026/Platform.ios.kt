@@ -3,6 +3,7 @@ package com.team2813.scouting.scoutingapp2026
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.ClipEntry
 import com.team2813.scouting.scoutingapp2026.backend.DiskRepository
+import com.team2813.scouting.scoutingapp2026.backend.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.darwin.Darwin
@@ -27,6 +28,7 @@ actual fun clipEntryOf(string: String): ClipEntry =
 val platformModule: Module = module {
     single<DiskRepositoryImpl> { DiskRepositoryImpl() } bind
         DiskRepository::class
+    single<LoggerImpl> { LoggerImpl() } bind Logger::class
 }
 actual val platformConfig: KoinConfiguration? = koinConfiguration {
     modules(platformModule)

@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.koin.core.Koin
-import org.koin.core.logger.Logger
 
 private const val filename = "matches.json"
 private const val stateFilename = "state.json"
@@ -45,7 +43,8 @@ private fun AllData.asCurrentState(): CurrentState? {
 
 class BlueAllianceRepositoryActual(
     private val diskRepo: DiskRepository,
-    private val tbaKey: String
+    private val tbaKey: String,
+    private val logger: Logger,
 ) : BlueAllianceRepository {
     private val _allData: MutableStateFlow<AllData> =
         MutableStateFlow(AllData())
@@ -134,8 +133,10 @@ class BlueAllianceRepositoryActual(
                 driverStationNum,
                 matchMap)
         } catch (e: Exception) {
-            println(
-                "An error occurred while loading the competition $compId on $color $driverStationNum: ${e.stackTraceToString()}")
+            logger.e(
+                "TBA Repo",
+                "An error occurred while loading the competition $compId on $color $driverStationNum",
+                e)
             return null
         }
     }
