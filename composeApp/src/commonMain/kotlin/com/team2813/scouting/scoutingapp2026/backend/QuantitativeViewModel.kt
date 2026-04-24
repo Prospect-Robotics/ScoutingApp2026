@@ -27,12 +27,10 @@ class AutoData {
     val fuelDepot = mutableStateOf(false)
     val fuelNeutral = mutableStateOf(false)
     val climb = mutableStateOf(false)
-    val cycleNumber = mutableIntStateOf(0)
     val approxFuel = mutableIntStateOf(0)
 }
 
 class TeleopData {
-    val Cycles = mutableIntStateOf(0)
     val Fuel = mutableIntStateOf(0)
     val incapacitatedTime = mutableStateOf(Duration.ZERO)
     val defenseTime = mutableStateOf(Duration.ZERO)
@@ -48,7 +46,6 @@ class PreMatchData {
 class EndgameData {
     val selectedClimb = mutableStateOf("None")
     val selectedSide = mutableStateOf("N/A")
-    val numCycles = mutableIntStateOf(0)
     val isFailed = mutableStateOf(false)
     val climbTime = mutableIntStateOf(0)
     val notes = mutableStateOf("")

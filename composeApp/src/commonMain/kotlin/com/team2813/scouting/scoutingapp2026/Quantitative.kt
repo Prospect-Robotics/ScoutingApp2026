@@ -274,8 +274,6 @@ fun Autonomous(
                 }
             }
             ApproxFuel(autoData.approxFuel, modifier = Modifier.fillMaxWidth())
-
-            IncrementButton("Cycle counter", autoData.cycleNumber)
         }
 }
 
@@ -329,10 +327,6 @@ fun Teleoperated(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement =
             Arrangement.spacedBy(10.dp, Alignment.CenterVertically)) {
-            IncrementButton(
-                stringResource(Res.string.cycles),
-                teleopData.Cycles,
-                enabled = true)
             Column(
                 modifier = modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -421,10 +415,6 @@ fun Endgame(
             }
             Text("Climb Timer")
             ClimbTimer(endgameData.climbTime)
-            IncrementButton(
-                stringResource(Res.string.cycles),
-                endgameData.numCycles,
-                enabled = true)
             ApproxFuel(endgameData.fuel, modifier = Modifier.fillMaxWidth())
             TextField(
                 value = notes,

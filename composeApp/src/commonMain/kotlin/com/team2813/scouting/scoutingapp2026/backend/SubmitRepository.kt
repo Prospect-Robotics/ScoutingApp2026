@@ -35,11 +35,9 @@ class SubmitRepositoryActual : SubmitRepository {
                     addMutable(
                         "entry.1380976125", AutoData::fuelNeutral, ::booleanStr)
                     addMutable("entry.672098235", AutoData::climb, ::booleanStr)
-                    addMutable("entry.420184502", AutoData::cycleNumber)
                     addMutable("entry.554128120", AutoData::approxFuel)
                 }
                 wrap(SubmitData::teleopData) {
-                    addMutable("entry.2076833081", TeleopData::Cycles)
                     addMutable("entry.2069256175", TeleopData::Fuel)
                     addMutable(
                         "entry.230562156",
@@ -53,7 +51,6 @@ class SubmitRepositoryActual : SubmitRepository {
                 wrap(SubmitData::endgameData) {
                     addMutable("entry.1582430388", EndgameData::selectedClimb)
                     addMutable("entry.581821715", EndgameData::selectedSide)
-                    addMutable("entry.664881520", EndgameData::numCycles)
                     addMutable(
                         "entry.290189424", EndgameData::isFailed, ::booleanStr)
                     addMutable("entry.1299729214", EndgameData::climbTime) {
