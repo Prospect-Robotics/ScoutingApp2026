@@ -231,25 +231,26 @@ private fun CompSelector(
                     onDismissRequest = { dismiss() },
                 ) {
                     Card(
-                        Modifier.fillMaxWidth().height(375.dp).padding(16.dp),
+                        Modifier.fillMaxWidth().padding(16.dp),
                         shape = RoundedCornerShape(16.dp)) {
                             Column(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment =
                                     Alignment.CenterHorizontally,
                             ) {
                                 Text(
                                     stringResource(Res.string.TBAConfirmation),
-                                    modifier = Modifier.padding(16.dp))
+                                    modifier = Modifier.padding(16.dp),
+                                    textAlign = TextAlign.Center)
                                 Row {
-                                    TextButton(
+                                    Button(
                                         onClick = dismiss,
                                         modifier = Modifier.padding(8.dp),
                                     ) {
                                         Text(stringResource(Res.string.no))
                                     }
-                                    TextButton(
+                                    Button(
                                         onClick = accept,
                                         modifier = Modifier.padding(8.dp),
                                     ) {
