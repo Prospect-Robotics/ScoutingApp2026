@@ -6,8 +6,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
@@ -95,7 +95,7 @@ fun HomeScreen(navController: NavHostController) {
             painterResource(Res.drawable.frc_rebuilt_color_icon),
             stringResource(Res.string.rebuilt_logo),
             modifier =
-                Modifier.fillMaxWidth(0.25F)
+                Modifier.fillMaxHeight(0.20f)
                     .align(Alignment.TopCenter)
                     .padding(top = 25.dp))
         Column(
@@ -121,7 +121,7 @@ fun HomeScreen(navController: NavHostController) {
             painterResource(bottomImage),
             stringResource(Res.string.gear_heads_logo),
             modifier =
-                Modifier.fillMaxWidth(0.25F)
+                Modifier.fillMaxHeight(0.15f)
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 25.dp))
     }
