@@ -23,6 +23,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,6 +46,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -271,29 +273,29 @@ private fun CompSelectInternal(allData: AllData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement =
             Arrangement.spacedBy(0.dp, Alignment.CenterVertically)) {
-            Text(
-                stringResource(Res.string.eventName),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-            )
-            Text("${allData.eventName}")
+            ProvideTextStyle(TextStyle(textAlign = TextAlign.Center)) {
+                Text(
+                    stringResource(Res.string.eventName),
+                    fontWeight = FontWeight.Bold,
+                )
+                Text("${allData.eventName}")
 
-            Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
-            Text(
-                stringResource(Res.string.eventCode),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-            )
-            Text("${allData.eventCode}")
+                Text(
+                    stringResource(Res.string.eventCode),
+                    fontWeight = FontWeight.Bold,
+                )
+                Text("${allData.eventCode}")
 
-            Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
-            Text(
-                stringResource(Res.string.driverStation),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-            )
-            Text("${allData.allianceColor.value} ${allData.driverStationNum}")
+                Text(
+                    stringResource(Res.string.driverStation),
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    "${allData.allianceColor.value} ${allData.driverStationNum}")
+            }
         }
 }
