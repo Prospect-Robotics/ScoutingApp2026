@@ -60,29 +60,43 @@ class BlueAllianceRepositoryActual(
     override suspend fun setCompetition(
         compId: String,
         color: AllianceColor,
-        driverStationNum: Int
+        driverStationNum: Int,
+        forceRefresh: Boolean,
     ) {
-        readFromCache(CurrentState(compId, color, driverStationNum))?.let {
-            _allData.value = it
-            return
+        // If we aren't forcing a refresh we can try reading from the local
+        // cache
+        if (!forceRefresh) {
+            readFromCache(CurrentState(compId, color, driverStationNum))?.let {
+                _allData.value = it
+                return
+            }
         }
         readCompetition(compId, color, driverStationNum)?.let {
             _allData.value = it
-            writeToDisk(it)
+            if (it.matchMap.isNotEmpty()) {
+                writeToDisk(it)
+            }
         }
     }
 
     override suspend fun fetchCompetition(
         compId: String,
         color: AllianceColor,
-        driverStationNum: Int
+        driverStationNum: Int,
+        forceRefresh: Boolean,
     ) {
-        if (readFromCache(CurrentState(compId, color, driverStationNum)) !=
-            null) {
-            return // already know about it; nothing to fetch
+        // If we aren't forcing a refresh we can try reading from the local
+        // cache
+        if (!forceRefresh) {
+            if (readFromCache(CurrentState(compId, color, driverStationNum)) !=
+                null) {
+                return // already know about it; nothing to fetch
+            }
         }
         readCompetition(compId, color, driverStationNum)?.let {
-            writeToDisk(it)
+            if (it.matchMap.isNotEmpty()) {
+                writeToDisk(it)
+            }
         }
     }
 
@@ -235,7 +249,8 @@ class BlueAllianceRepositorySkeleton : BlueAllianceRepository {
     override suspend fun setCompetition(
         compId: String,
         color: AllianceColor,
-        driverStationNum: Int
+        driverStationNum: Int,
+        forceRefresh: Boolean,
     ) {
         _allData.update {
             it.copy(
@@ -249,7 +264,8 @@ class BlueAllianceRepositorySkeleton : BlueAllianceRepository {
     override suspend fun fetchCompetition(
         compId: String,
         color: AllianceColor,
-        driverStationNum: Int
+        driverStationNum: Int,
+        forceRefresh: Boolean,
     ) {}
 
     override suspend fun clearCompetition() {
@@ -269,13 +285,15 @@ interface BlueAllianceRepository {
     suspend fun setCompetition(
         compId: String,
         color: AllianceColor,
-        driverStationNum: Int
+        driverStationNum: Int,
+        forceRefresh: Boolean = false,
     )
 
     suspend fun fetchCompetition(
         compId: String,
         color: AllianceColor,
-        driverStationNum: Int
+        driverStationNum: Int,
+        forceRefresh: Boolean = false,
     )
 
     suspend fun clearLocalCache()
