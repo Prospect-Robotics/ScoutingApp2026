@@ -8,6 +8,6 @@
     <string name="back">Back</string>
     <string name="openTBAConfirmation">Confirm a forced refresh from The Blue Alliance </string>
     <string name="TBAConfirmation">"Force a refresh from The Blue Alliance?"</string>
-    <string name="yes">yes</string>
-    <string name="no">no</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
