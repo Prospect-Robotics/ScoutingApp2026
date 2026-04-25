@@ -28,7 +28,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.team2813.scouting.scoutingapp2026.backend.AllData
@@ -166,21 +168,27 @@ private fun CompSelectInternal(allData: AllData) {
             Arrangement.spacedBy(0.dp, Alignment.CenterVertically)) {
             Text(
                 stringResource(Res.string.eventName),
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
             Text("${allData.eventName}")
 
             Spacer(modifier = Modifier.height(5.dp))
 
             Text(
                 stringResource(Res.string.eventCode),
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
             Text("${allData.eventCode}")
 
             Spacer(modifier = Modifier.height(5.dp))
 
             Text(
                 stringResource(Res.string.driverStation),
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
             Text("${allData.allianceColor.value} ${allData.driverStationNum}")
         }
 }
