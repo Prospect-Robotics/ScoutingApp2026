@@ -6,4 +6,8 @@
     <string name="fetch">Fetch</string>
     <string name="driverStation">Driver Station</string>
     <string name="back">Back</string>
+    <string name="openTBAConfirmation">Confirm a forced refresh from The Blue Alliance </string>
+    <string name="TBAConfirmation">"Force a refresh from The Blue Alliance?"</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

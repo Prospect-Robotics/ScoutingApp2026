@@ -8,9 +8,15 @@ class EventViewModel(private val tbaRepo: BlueAllianceRepository) :
     suspend fun setEvent(
         eventCode: String,
         allianceColor: AllianceColor,
-        driveStationId: Int
+        driveStationId: Int,
+        forceRefresh: Boolean = false,
     ) {
-        tbaRepo.setCompetition(eventCode, allianceColor, driveStationId)
+        tbaRepo.setCompetition(
+            eventCode,
+            allianceColor,
+            driveStationId,
+            forceRefresh,
+        )
     }
 
     suspend fun load() {
