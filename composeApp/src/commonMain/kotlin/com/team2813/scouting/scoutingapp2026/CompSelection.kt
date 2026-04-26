@@ -46,9 +46,12 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
@@ -69,6 +72,7 @@ import scoutingapp2026.composeapp.generated.resources.eventCode
 import scoutingapp2026.composeapp.generated.resources.eventName
 import scoutingapp2026.composeapp.generated.resources.no
 import scoutingapp2026.composeapp.generated.resources.openTBAConfirmation
+import scoutingapp2026.composeapp.generated.resources.tba_thanks
 import scoutingapp2026.composeapp.generated.resources.yes
 
 @Composable
@@ -97,6 +101,15 @@ fun CompSelection(
                 CompSelectInternal(allData)
             }
         }
+        val poweredByText = buildAnnotatedString {
+            val segments = stringResource(Res.string.tba_thanks).split("|")
+            append(segments[0])
+            withLink(LinkAnnotation.Url("https://thebluealliance.com")) {
+                append(segments[1])
+            }
+            append(segments[2])
+        }
+        Text(poweredByText, modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
 

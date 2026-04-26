@@ -10,4 +10,6 @@
     <string name="TBAConfirmation">Force a refresh from The Blue Alliance?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <!--Text in between the vertical dividers ('|') are rendered as a TBA link. Don't use more than two vertical dividers-->
+    <string name="tba_thanks">Competition select powered by |TBA|</string>
 </resources>
