@@ -2,15 +2,7 @@ package com.team2813.scouting.scoutingapp2026
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,17 +26,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.dsl.KoinAppDeclaration
-import org.koin.dsl.KoinConfiguration
 import org.koin.dsl.includes
 import org.koin.dsl.koinConfiguration
-import scoutingapp2026.composeapp.generated.resources.Res
-import scoutingapp2026.composeapp.generated.resources.blue2813
-import scoutingapp2026.composeapp.generated.resources.done
-import scoutingapp2026.composeapp.generated.resources.frc_rebuilt_color_icon
-import scoutingapp2026.composeapp.generated.resources.gear_heads_logo
-import scoutingapp2026.composeapp.generated.resources.quantitative
-import scoutingapp2026.composeapp.generated.resources.rebuilt_logo
-import scoutingapp2026.composeapp.generated.resources.yellow2813
+import scoutingapp2026.composeapp.generated.resources.*
 
 @Serializable object Home
 
@@ -111,14 +95,8 @@ fun HomeScreen(navController: NavHostController) {
                         Text("Competition Select")
                     }
             }
-        val bottomImage =
-            if (isSystemInDarkTheme()) {
-                Res.drawable.yellow2813
-            } else {
-                Res.drawable.blue2813
-            }
         Image(
-            painterResource(bottomImage),
+            painterResource(Res.drawable.logo2813),
             stringResource(Res.string.gear_heads_logo),
             modifier =
                 Modifier.fillMaxHeight(0.15f)
