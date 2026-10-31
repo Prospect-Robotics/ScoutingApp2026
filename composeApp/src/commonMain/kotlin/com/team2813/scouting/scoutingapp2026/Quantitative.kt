@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,6 +26,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +42,7 @@ import kotlin.time.TimeSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -297,14 +300,37 @@ fun TimeElement(
             mark = null
         }
     }
-    Checkbox(
-        mark != null,
-        onCheckedChange = {
-            mark?.let {
-                time += it.elapsedNow()
-                mark = null
-            } ?: run { mark = TimeSource.Monotonic.markNow() }
-        })
+    val currentIcon =
+        if (mark != null) {
+            Res.drawable.timer_pause
+        } else {
+            Res.drawable.timer_play
+        }
+    val action =
+        if (mark != null) {
+            "pause"
+        } else {
+            "play"
+        }
+    AnimatedContent(
+        currentIcon,
+        transitionSpec = { fadeIn().togetherWith(fadeOut()) },
+    ) { icon ->
+        Icon(
+            painterResource(icon),
+            contentDescription = "$action timer",
+            modifier =
+                Modifier.clickable(
+                        onClick = {
+                            mark?.let {
+                                time += it.elapsedNow()
+                                mark = null
+                            } ?: run { mark = TimeSource.Monotonic.markNow() }
+                        })
+                    .padding(5.dp)
+                    .size(25.dp),
+        )
+    }
 }
 
 @Composable

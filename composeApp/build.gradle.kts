@@ -80,7 +80,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.team2813.scouting.scoutingapp2026"
+        applicationId = "com.team2813.scouting.scoutingapprebuilt"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -93,7 +93,9 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFile(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
     }
     compileOptions {
