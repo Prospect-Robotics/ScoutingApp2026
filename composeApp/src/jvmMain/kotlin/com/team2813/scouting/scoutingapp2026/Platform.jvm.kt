@@ -1,5 +1,6 @@
 package com.team2813.scouting.scoutingapp2026
 
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.ClipEntry
 import com.team2813.scouting.scoutingapp2026.backend.DiskRepository
 import com.team2813.scouting.scoutingapp2026.backend.Logger
@@ -24,6 +25,7 @@ actual fun httpClient(config: HttpClientConfig<*>.() -> Unit): HttpClient =
         }
     }
 
+@OptIn(ExperimentalComposeUiApi::class)
 actual fun clipEntryOf(string: String): ClipEntry =
     ClipEntry(StringSelection(string))
 

@@ -12,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,7 +24,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.includes
@@ -118,26 +118,31 @@ fun App(configuration: KoinAppDeclaration? = null) {
                         .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                KoinApplication({
-                    includes(
-                        platformConfig,
-                        configuration?.let { koinConfiguration(it) })
-                    modules(commonModule)
-                }) {
-                    val navController: NavHostController =
-                        rememberNavController()
-                    NavHost(navController, startDestination = Home) {
-                        composable<Home> { HomeScreen(navController) }
-                        composable<Quantitative> { Quantitative(navController) }
-                        composable<QRCode> { navBackStack ->
-                            val qrcode = navBackStack.toRoute<QRCode>()
-                            QRCodeScreen(qrcode.url, navController)
+                KoinApplication(
+                    configuration =
+                        koinConfiguration {
+                            includes(
+                                platformConfig,
+                                configuration?.let { koinConfiguration(it) })
+                            modules(commonModule)
+                        },
+                    content = {
+                        val navController: NavHostController =
+                            rememberNavController()
+                        NavHost(navController, startDestination = Home) {
+                            composable<Home> { HomeScreen(navController) }
+                            composable<Quantitative> {
+                                Quantitative(navController)
+                            }
+                            composable<QRCode> { navBackStack ->
+                                val qrcode = navBackStack.toRoute<QRCode>()
+                                QRCodeScreen(qrcode.url, navController)
+                            }
+                            composable<CompetitionSelect> {
+                                CompSelection(navController)
+                            }
                         }
-                        composable<CompetitionSelect> {
-                            CompSelection(navController)
-                        }
-                    }
-                }
+                    })
             }
         }
     }

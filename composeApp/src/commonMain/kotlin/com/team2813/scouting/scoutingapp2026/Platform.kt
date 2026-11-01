@@ -62,6 +62,7 @@ val previewModule: Module = module {
     viewModel<QuantitativeViewModel> {
         QuantitativeViewModel(submitRepository = get(), tbaRepository = get())
     }
+    viewModel<EventViewModel> { EventViewModel(tbaRepo = get()) }
 }
 
 val applicationName: String

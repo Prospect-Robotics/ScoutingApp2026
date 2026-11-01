@@ -52,6 +52,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
@@ -60,7 +61,6 @@ import com.team2813.scouting.scoutingapp2026.backend.AllianceColor
 import com.team2813.scouting.scoutingapp2026.backend.EventViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import scoutingapp2026.composeapp.generated.resources.Res
 import scoutingapp2026.composeapp.generated.resources.TBAConfirmation
